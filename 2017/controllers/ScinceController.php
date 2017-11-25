@@ -323,25 +323,42 @@ class ScinceController extends test{
              
              foreach($filesShow as $key){
                  echo "<div name='fl' class='show_fl'>".$key."</div>";
-                 echo "<div class='del_fl'><label for='".$key."'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";
+                if ($this->user_id() === $_SESSION['user_id']) {
+                    echo "<div class='del_fl'><label for='".$key."'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";
+                 }
                 
              }
              
          }
      }
      
+     public function ShowButtonUploadFiles(){
+        if ($this->user_id() === $_SESSION['user_id']) {
+            include ROOT_MENUU.'/views/ButtonUploadFiles.php';
+        }else{
+            return FALSE;
+        }
+     }
+     
+     
      public function OpenFileAction(){
-     //    var_dump($_REQUEST);
+        // var_dump($_REQUEST);
+        // echo $this->user_id();
          
          $name = $_REQUEST['name'];
-         $type = mime_content_type(ROOT_MENUU.'/files/'.$this->user_id().'/' . $name);
+         $user_id = (isset($_REQUEST['user_id']) && ($_REQUEST['user_id'] !== 'undefined')) ? $_REQUEST['user_id'] : $this->user_id();
          
+         //var_dump($user_id);
+         
+         $type = mime_content_type(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
+         
+         //var_dump($type);
      //    echo $this->user_id();
          
           header('Content-type: '.$type);
                 header('Content-disposition: inline; filename = ' . $name .'');
              // echo $type;
-               readfile(ROOT_MENUU.'/files/'.$this->user_id().'/' . $name);
+               readfile(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
          
          
          

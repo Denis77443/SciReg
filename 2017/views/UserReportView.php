@@ -20,21 +20,18 @@
     <div id="textRep">
         <textarea <?= $this->disabled_rep; ?> class="textarea_class" name='report' 
               id="<?=$this->user_id();?>"><?=$this->ShowReport();?></textarea>
-     </div>  
-  <!--  <fieldset>
-        <legend>
-            <a class="legenda">Файлы</a>
-        </legend>-->
-        <div style="padding-left:0%">
+    </div>  
+    <div style="padding-left:0%">
         <form name="upload">
-            <label class="inputCustom">
-                Прикрепить файл
-                <input type='file' value='Прикрепить файл' multiple id='files'>
-             </label>   
+            
+            <!--Показывать кнопку прикрепления файлов только на "собственной" 
+            странице пользователя-->
+            <?=$this->ShowButtonUploadFiles()?>
+               
+            
             <div id="res_fl"><?=$this->ShowFiles();?></div>
         </form>
         </div>
-   <!-- </fieldset>-->
 </fieldset>
 
 
@@ -59,6 +56,7 @@
     //document.getElementById('res_fl').addEventListener('click', showFile);
     
     
+    if(document.getElementById('files')){
     
     document.getElementById('files').addEventListener('change', function(e){
         var input = e.target.files[0], flag=0, sameFile=0;
@@ -95,7 +93,7 @@
               console.log(xhr.responseText);
                if (sameFile === 0) {
                  document.getElementById("res_fl").innerHTML += "<div name='fl' class='show_fl'>"+input.name+"</div>";    
-                 document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"' style='cursor:pointer'><img src='/Images/delete-icon.png'  style='position:relative; margin-bottom: -2px;'></label></div>";    
+                 document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";    
               }  
                
                openFile('show_fl');
@@ -107,6 +105,7 @@
         xhr.send(formData);
     }  
     }, false);
+    }
     //document.getElementById("lat").addEventListener("click", Latex);
     //document.getElementById("77").addEventListener("change", check);
       
@@ -119,6 +118,7 @@
  
  function openFile(classs){
      var fl = document.querySelectorAll("div[class="+classs+"]");
+    
      /*
       * Открытие прикреплённого файла
       */ 
@@ -127,8 +127,9 @@
              obj.addEventListener(evt, function(e){
                  var name = e.target.textContent,
                      host = location.host,
-                     url = 'http://'+host+'/'+YEAR+'/index.php?url=openfile&name='+name;
-                  
+                     user_id = location.search.split('id=')[1];
+                     url = 'http://'+host+'/'+YEAR+'/index.php?url=openfile&name='+name+"&user_id="+user_id;
+                     
                   window.open(url, "location=yes,resizable=yes,scrollbars=yes,status=yes");   
               }, false) ;
           });
@@ -190,7 +191,7 @@
  
        openFile('show_fl');
        deleteFile('del_fl');
-     
+     //e.preventDefault();
       
       Array.prototype.forEach.call(textReport, function(obj){
          // var data = {};
