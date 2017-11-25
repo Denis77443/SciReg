@@ -1,0 +1,703 @@
+
+#menu, #menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+#menu {
+    width: 1030px;
+    margin: 0 auto;
+    border: 1px solid #222;
+    background-color: #111;
+    background-image: -moz-linear-gradient(#444, #111);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111));
+    background-image: -webkit-linear-gradient(#444, #111);
+    background-image: -o-linear-gradient(#444, #111);
+    background-image: -ms-linear-gradient(#444, #111);
+    background-image: linear-gradient(#444, #111);
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -moz-box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset;
+    -webkit-box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset;
+    box-shadow: 0 1px 1px #777, 0 1px 0 #666 inset;
+}
+#menu:before,
+#menu:after {
+    content: "";
+    display: table;
+}
+#menu:after {
+    clear: both;
+}
+#menu {
+    zoom:1;
+}
+#menu li {
+    float: left;
+    border-right: 1px solid #222;
+    -moz-box-shadow: 1px 0 0 #444;
+    -webkit-box-shadow: 1px 0 0 #444;
+    box-shadow: 1px 0 0 #444;
+    position: relative;
+}
+#menu a {
+    float: left;
+    padding: 12px 30px;
+    color: #999;
+    text-transform: uppercase;
+    font: bold 12px Arial, Helvetica;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #000;
+}
+#menu li:hover > a {
+    color: #fafafa;
+}
+
+#menu ul {
+    margin: 20px 0 0 0;
+    _margin: 0; /*Только для IE6*/
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 38px;
+    left: 0;
+    z-index: 9999;
+    background: #444;
+    background: -moz-linear-gradient(#444, #111);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#111));
+    background: -webkit-linear-gradient(#444, #111);
+    background: -o-linear-gradient(#444, #111);
+    background: -ms-linear-gradient(#444, #111);
+    background: linear-gradient(#444, #111);
+    -moz-box-shadow: 0 -1px rgba(255,255,255,.3);
+    -webkit-box-shadow: 0 -1px 0 rgba(255,255,255,.3);
+    box-shadow: 0 -1px 0 rgba(255,255,255,.3);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+#menu li:hover > ul {
+    opacity: 1;
+    visibility: visible;
+    margin: 0;
+}
+#menu ul ul {
+    top: 0;
+    left: 150px;
+    margin: 0 0 0 20px;
+    _margin: 0; /*Только для IE6*/
+    -moz-box-shadow: -1px 0 0 rgba(255,255,255,.3);
+    -webkit-box-shadow: -1px 0 0 rgba(255,255,255,.3);
+    box-shadow: -1px 0 0 rgba(255,255,255,.3);
+}
+#menu ul li {
+    float: none;
+    display: block;
+    border: 0;
+    _line-height: 0; /*Только для IE6*/
+    -moz-box-shadow: 0 1px 0 #111, 0 2px 0 #666;
+    -webkit-box-shadow: 0 1px 0 #111, 0 2px 0 #666;
+    box-shadow: 0 1px 0 #111, 0 2px 0 #666;
+}
+#menu ul li:last-child {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+#menu ul a {
+    padding: 10px;
+    width: 140px;
+    _height: 10px; /*Только для IE6*/
+    display: block;
+    white-space: nowrap;
+    float: none;
+    text-transform: none;
+}
+#menu ul a:hover {
+    background-color: #0186ba;
+    background-image: -moz-linear-gradient(#04acec,  #0186ba);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#04acec), to(#0186ba));
+    background-image: -webkit-linear-gradient(#04acec, #0186ba);
+    background-image: -o-linear-gradient(#04acec, #0186ba);
+    background-image: -ms-linear-gradient(#04acec, #0186ba);
+    background-image: linear-gradient(#04acec, #0186ba);
+}
+#menu ul li:first-child > a {
+    -moz-border-radius: 3px 3px 0 0;
+    -webkit-border-radius: 3px 3px 0 0;
+    border-radius: 3px 3px 0 0;
+}
+#menu ul li:first-child > a:after {
+    content: '';
+    position: absolute;
+    left: 40px;
+    top: -6px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #444;
+}
+#menu ul ul li:first-child a:after {
+    left: -6px;
+    top: 50%;
+    margin-top: -6px;
+    border-left: 0;
+    border-bottom: 6px solid transparent;
+    border-top: 6px solid transparent;
+    border-right: 6px solid #3b3b3b;
+}
+#menu ul li:first-child a:hover:after {
+    border-bottom-color: #04acec;
+}
+#menu ul ul li:first-child a:hover:after {
+    border-right-color: #0299d3;
+    border-bottom-color: transparent;
+}
+#menu ul li:last-child > a {
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+}
+.header {
+    background-color: ivory;
+    margin: 0 auto;
+    border: 1px solid black;
+    width: 1030px;
+    
+   /* height: 1px;
+    overflow-x: hidden;
+    overflow-y: auto;*/
+}
+
+.main_body {
+    background-color: gainsboro;
+    height: 100%; 
+    
+   /* margin-top: calc(100vw - 100%);
+    margin-bottom: 0;*/
+    /*position:relative;*/
+   /* position:fixed;*/
+   
+   /*overflow: hidden;*/
+   
+}
+
+.content_main {
+    position: relative;
+    background-color: ivory;
+    margin: 0 auto;
+    border: 0px double black;
+    width: 1030px;
+    min-height: 600px;
+    
+  
+}
+
+.content_other_user {
+    position: relative;
+    background-color: #AADDFF;
+    margin: 0 auto;
+    border: 0px double black;
+    width: 1030px;
+}
+
+.error_login {
+    position: relative;
+    background-color: ivory;
+    margin: 0 auto;
+    text-align: center;
+    border: 0px double black;
+    width: 1030px;
+    color:red;
+}
+
+.content_search {
+    margin-top: 15px;
+    position:absolute;
+    top:0;
+    right:0;
+    width:455px;
+}
+
+.content_left {
+    margin-top: 15px;
+    position:absolute;
+    top:0;
+    left:0;
+    width:315px;
+}
+.content_center {
+    display:none;
+    margin-top: 15px;
+    position:absolute;
+    top:0;
+    right:469px;
+    width:250px;
+}
+
+.footer {
+    background-color: #444444;
+    height: 100px;
+    margin: 0 auto;
+    border: 1px solid black;
+    width: 1030px;
+}
+.input_podr {
+    width: 270px;
+}
+.div_edit{
+    float: left;
+    width: 400px;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px black;
+}
+.div_edit01{
+    vertical-align: middle;
+    text-align: center;
+}
+.div_edit02{
+    float: inherit;
+    width: 10px;
+    vertical-align: middle;
+    text-align: center;
+}
+.user{
+    position: absolute;
+    /*right: 100px;*/
+    left: 450px;
+    width: 183px;
+    border: 1px solid;
+    
+    box-sizing:content-box;
+-ms-box-sizing:content-box;
+-moz-box-sizing:content-box;
+-webkit-box-sizing:content-box;
+    
+    /*margin-left: 40px;*/
+}
+.icon_warning{
+    
+    background-image: url(../2016/Main/en.png);
+    background-repeat: no-repeat;
+    background-position: right center; 
+    background-size: 18px 18px;
+}
+.user_login{
+    /*position: absolute;
+    left: 110px;*/
+    margin-left: 35px;
+    float:right;
+    border-color: black;
+}
+.login_div{
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 41px;
+    text-align: center;
+}
+.registration_div{
+    width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;  
+}
+.scince_activity{
+    position: absolute;
+    left: 390px;
+    margin-left: 25px;
+}
+.input_error1{
+    position: absolute;
+    left: 650px;
+    top: 25px;
+    color: red;
+}
+.input_error2{
+    position: absolute;
+    left: 650px;
+    top: 50px;
+    color: red;
+}
+
+.input_error3{
+    position: absolute;
+    left: 650px;
+    top: 75px;
+    color: red;
+}
+.subject{
+    float:left;
+    width: 500px;
+    border: 1px solid;
+}
+.checkbox_subject{
+    float:left;
+}
+textarea{
+    resize: none;
+   /*overflow: hidden;*/
+}
+.textarea_class{
+    resize: none;
+    /*overflow: hidden;*/
+    max-height: 400px;
+    width: 998px;
+}
+
+.a_class{
+    width: 177px;
+}
+.paragraph{
+    margin-left: 52px;
+}
+textarea:disabled{
+    color: black;
+}
+textarea {
+    box-sizing: border-box;
+    resize: none;
+}
+.slv{
+    position: absolute;
+    height: 0px;
+}
+.divis_name{
+   font: 15px Arial; 
+   font-family: fantasy;
+   font-weight: bolder;
+}
+.fio_stat{
+    font: 15px Arial;
+    clear: both;
+    width: 177px;
+    float: left;
+}
+.fio_stat_tmpl{
+    font: 15px Arial;
+    font-family: fantasy;
+    font-weight: bolder;
+    clear: both;
+    width: 150px;
+    float: left;
+    height: 30px;
+    text-align: center;
+    /*background-color: #cccccc;*/
+    border: 1px solid white;
+    padding-top: 10px;
+}
+.fio_stat_row{
+    font: 15px Arial;
+    font-family: fantasy;
+    font-weight: bolder;
+    width: 160px;
+    height: 30px;
+    float: left;
+    text-align: center;
+   /* background-color: #cccccc;*/
+    border: 1px solid white;
+    padding-top: 10px;
+}
+.subject_stat_gr{
+    font:bolder 15px arial;
+    float:left;
+    width: 20px;
+    height: 20px;
+    color: #fafafa;
+    text-align: center;
+    font-weight: bold;
+    background-color:OliveDrab;
+    border: 1px solid white;
+    
+   /* border: 1px solid green;*/
+    /*width:100px;*/
+   /* width:auto;*/
+}
+
+.subject_stat_rd{
+    font:bolder 15px arial;
+    float:left;
+    width: 20px;
+    height: 20px;
+    color: #fafafa;
+    text-align: center;
+    font-weight: bold;
+    background-color:OrangeRed;
+    border: 1px solid white;
+    /*width:100px;*/
+   /* width:auto;*/
+}
+
+.title_text{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+div.profile{
+    clear:both;
+    text-align: right;
+    line-height:25px;
+}
+
+label.lab_profile{
+    float:left;
+    padding-right:10px;
+}
+input.profile{
+    border: 1px solid;
+}
+
+div.registration_div {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    width: 500px;
+}
+
+div.regist{
+    clear:both;
+    text-align: right;
+    line-height:25px;
+}
+
+input.regist{
+    border: 1px solid;
+    width: 230px;
+}
+
+input.regist_subm{
+    margin-top: 20px;
+    margin-left: 40%;
+    margin-right: 30%;
+    border: 1px solid;
+    width: 100px;
+}
+
+select.regist{
+    border: 1px solid;
+    width: 234px;
+    border-width: 2px !important;
+  border-style: inset !important;
+  -moz-border-radius: 0 !important;
+    
+    
+}
+
+div.comment{
+    float:left;
+    width: 230px;
+    text-align:left;
+    border: solid 0px red;
+    color: red;
+    margin-top: 100px;
+    font-family: Verdana;
+    font-size: 10pt;
+    
+}
+
+div.phone{
+    margin-top: 5px;
+    position:relative;
+    
+}
+
+.phone *{
+    font-family: DejaVu Sans;
+    font-size: 10pt;
+        }
+
+.phone .word{
+    line-height: 18px;
+    border: 1px solid black;
+    border-right: none;
+    float: right;
+    height: 18px;
+    padding: 2px 5px 0px 2px;
+            
+}
+        
+.phone .phone_input{
+    padding: 2px 0px 0px 2px;
+    line-height: 25px;
+    border: 1px solid black;
+    border-left: none;
+    float: right;
+    width: 160px;
+    height: 18px;
+}
+
+.error_registration{
+    color:red; 
+    border: 0px solid red; 
+    width: 250px; 
+    height: 65px; 
+    margin-top:2px; 
+    float:right; 
+    padding-right: 4%;
+    text-align: center;
+    font-size: 9pt;
+}
+
+.error_name{
+    float:right; 
+    width:590px;
+    font-size: 9pt;
+    text-align: left;
+    color:red;
+    padding-left: 7px;
+    line-height: 13px;
+}
+
+input#phone.regist::-webkit-input-placeholder::after{
+    color:green;
+    display:block;
+    content:"asmndnajkdhksjajdajkdjkasjdajkshdkjahsjdjkaskdjsahd";
+}
+
+input#phone.regist::-webkit-input-placeholder {
+    line-height: 20px;  transition: line-height 0.5s ease;
+}
+
+input#phone.regist:placeholder-shown {
+  /*border: 5px solid red;*/
+}
+
+input#tel.regist{
+   outline: none;
+}
+
+
+input#tel.regist:focus {
+   /* -webkit-user-select: -moz-none;*/
+    /* user-select -- это нестандартное свойство */
+
+  /*  -moz-user-select: none;
+    /* поэтому нужны префиксы */
+
+  /*  -ms-user-select: none;*/
+  /* -webkit-user-select: none; */
+   outline: none;
+    outline-width: 0;
+  /* outline: 0; */
+   
+  background: greenyellow;
+}
+
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+.search{
+    margin: auto;
+    text-align: left;
+    padding-top: 40px;
+    border: solid 0px;
+    width: 350px;
+    
+}
+a.menu_serv{
+    white-space: normal !important;
+    width: 190px !important;
+    cursor:pointer !important;
+}
+a.legenda{
+  font-weight:bold;  
+}
+
+a.latex{
+    float:right; 
+    cursor:pointer; 
+    padding-top:10px;
+}
+
+.intro{
+    padding-left: 70px; 
+    padding-right: 70px; 
+    padding-top: 40px; 
+    text-align: justify;
+}
+
+.printArea{
+    
+    border: solid 0px black;
+    height: 5px;
+    color: red;
+    text-align: center;
+}
+.login_div_label{
+    border:0px solid green; 
+    text-align: left; 
+    width: 50px; 
+    float:left
+}
+
+.login_div_input{
+    border:0px solid black; 
+    text-align: left; 
+    width: 230px; 
+    float:left
+}
+.login_btn{
+    clear:both; 
+    padding-top: 10px;
+}
+
+/* DIV ошибки и сообщение об удачном редактировании профиля*/
+.profile_change{
+    height: 100px;
+    color:green; 
+    font-size: 80%;
+    text-align: center; 
+  /*  padding-bottom: 20px; */
+    border: 0px solid red;
+}
+
+.edit_prof{
+   float:left; 
+   border: 0px solid green; 
+   padding-left:30%; 
+}
+
+.error_shadow{
+    background:#fcfcfc; 
+    -moz-box-shadow:0 0 10px #000; 
+    -webkit-box-shadow:0 0 10px #000; 
+    box-shadow:0 0 10px red;
+}
+
+/* БЛОК РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ*/
+
+/* Отступ от наименования метки до инпута*/
+.lbl_reg{
+    float:left; 
+    width: 150px;
+}
+
+/* Позиционирование кнопки СОХРАНИТЬ*/
+.sbm_reg{
+  clear:both;
+  text-align: right;
+  line-height:25px;
+  float:left; 
+  padding-left: 150px;  
+}
+
+/*Цвет звездочки метки - признак обязательного к заполнению поля*/
+span.star_reg{
+    color: red;
+}
+
+/* БЛОК ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ*/
+
+.sbmt{
+    clear:both; 
+    border: 0px solid red; 
+    text-align: center; 
+    padding-top: 20px;
+}

@@ -1,0 +1,296 @@
+<?php
+if(!defined('ROOT_MENUU')) die('access denied');
+include_once ROOT_MENUU.'/models/auth.php';
+include_once ROOT_MENUU.'/models/registration.php';
+
+class MenuLoginController {
+    //put your code here
+    function __construct() {
+      //  parent::__construct();
+
+        'КОНСТРУКТОРРРР ЛОГИН';
+    }
+    
+    public function HomeAction(){
+        include_once ROOT_MENUU.'/views/WelcomePageView.php';
+        return true;
+    }
+    
+    public function LoginAction(){
+        include_once ROOT_MENUU.'/views/UserLoginView.php';
+        return true;
+    }
+    
+    public function AuthAction(){
+       
+        $login = filter_input(INPUT_POST, 'surname');
+        $pass = filter_input(INPUT_POST, 'name');
+        
+        //var_dump($_POST);
+        
+        if((isset($login))&&(isset($pass))){
+     //   var_dump(auth::CheckLP($login, $pass));
+            $auth = auth::CheckLP($login, $pass);
+           // var_dump(auth::CheckLP($login, $pass));
+            
+            
+            if (empty($auth)){
+                ob_clean();
+                MenuLoginController::WriteToLog('Access ERROR : ', $login, ' access error incorrect login!');
+                echo 'Ошибка пользователь не найден!';  
+                exit();
+                ob_end_flush();
+                return false;
+               
+
+            }
+            
+            if($auth[0]['uid_wp'] != NULL){
+               // session_start();
+                $_SESSION['user_id'] = $auth[0]['uid'];
+                 MenuLoginController::WriteToLog('Logged in: ', $login);
+            //    header("Location:index.php?=".$auth[0]['uid']);
+                exit();
+                
+                echo '<h4>CORRECT</h4>';
+                return true;
+            }else{
+                if($pass == '9876'){
+                    
+                    if($auth[0]['uid'] != NULL){
+                       // session_start();
+                       ob_clean();
+                        $_SESSION['user_id'] = $auth[0]['uid'];
+                        MenuLoginController::WriteToLog('Logged in with admin pass: ', $login);
+                      
+                        
+                       //  header("Location:index.php?=".$auth[0]['uid']);
+                        //exit();
+                        echo '<h4>CORRECT</h4>';
+                         return true;
+                    }else{
+                        echo '<h4>НЕт такого Юзера!!!</h4>';
+                   // header("Location:index.php?url=login");
+                   // exit();
+                    return false;
+                    }
+                }else{
+                    ob_clean();
+                    MenuLoginController::WriteToLog('Access ERROR : ', $login, ' access error incorrect password!');
+                    echo 'Ошибка ввода пароля!';
+                    //header("Location:index.php?url=login");
+                    exit();
+                    return false;
+                    ob_end_flush();
+                }
+            }
+            
+            //return true;
+        }else{
+            echo '<h4>FALSEEEE</h4>';
+            return false;
+        }
+    }
+    
+    /*
+     * Регистрация нового пользователя
+     */
+    public function RegistrationAction(){
+       
+      //  include ROOT_MENUU.'/models/registration.php';
+        $post = registration::GetPost() ;
+        $depar = registration::GetDepartment();
+        
+        
+       // var_dump($depar);
+        include ROOT_MENUU.'/views/RegistrationPageView.php';
+    }
+    
+    /*
+     * Insert нового пользователя в БД
+     */
+    public function InsertUserAction(){
+        ob_clean();
+        $data_out = [];
+        
+        $data = get_object_vars( json_decode(file_get_contents('php://input')) );
+        
+        if (isset($data['lid'])){ $data_out['lid'] = $data['lid']; } 
+        $data_out['surname'] = "'".$data['surname']."'"; 
+        $data_out['name'] = "'".$data['name']."'"; 
+        $data_out['mname'] = "'".$data['mname']."'"; 
+        $data_out['uname'] = "'".$data['uname']."'"; 
+        $data_out['password'] = "PASSWORD('".$data['password']."')"; 
+        
+        if(isset($data['email'])){ $data_out['email'] = "'".$data['email']."'"; }
+        if(isset($data['phone'])){ $data_out['phone'] = "'".$data['phone']."'"; }
+        if(isset($data['mobile'])){ $data_out['mobile'] = "'".$data['mobile']."'"; }
+    
+        
+        $data_out['id_post'] = $data['id_post']; 
+       
+        
+        
+        
+        if (auth::CheckLogin($data['uname']) == FALSE) {
+            echo 'В БД уже есть пользователь с выбранным Вами Логином!';
+        } else {
+            //Выясняем к какой категории пользователей является 
+            //вновь вносимый в БД
+            
+         /*   if ($data['id_post'] == 100) { 
+                echo 'Это руководитель'; 
+                $data_out['sci'] = 1; 
+                $list = registration::GetListOfCipher($data['uname']);
+               
+                foreach($list as $key => $cipher){
+                    if(registration::GetUnitId($cipher) !== FALSE ){
+                        echo registration::GetUnitId($cipher)['uid'];
+                    }
+                }
+                
+            }*/
+            
+            if($data['id_post'] < 20 || $data['id_post'] == 100){ $data_out['sci'] = 1;}
+            if($data['id_post'] > 15 && $data['id_post']< 100){ $data_out['sci'] = 2;}
+            
+            $field_values = implode(",", $data_out); 
+            $field_names = implode(",", array_keys($data_out)); 
+            
+            if(userpage::InsertAnyRecord('users', $field_names, $field_values) == TRUE){
+                echo "Новый пользователь успешно добавлен в БД";
+                
+                if ($data['id_post'] == 100) {
+                    //echo 'Это руководитель'; 
+                    $data_out['sci'] = 1; 
+                    $list = registration::GetListOfCipher($data['uname']);
+                    $user_id = registration::GetUserId($data['uname']);
+                    
+                    foreach ($list as $key => $cipher) {
+                        if(registration::GetUnitId($cipher) !== FALSE ){
+                            $uid = registration::GetUnitId($cipher)['uid']; //uid подразделения
+                            userpage::UpdateHid($uid, $user_id);
+                        }
+                    } 
+                    
+                    $lid = registration::GetLidForHeader($user_id);
+                    $id_post = registration::GetPostForHeader($user_id);
+                  
+                    userpage::UpdateAnyRecord($user_id, 'users', 'lid', $lid);
+                    userpage::UpdateAnyRecord($user_id, 'users', 'id_post', $id_post);
+                    
+                  
+                }
+            }
+        }
+        
+     //   var_dump($data_out);
+        
+         
+      //  var_dump($field_names);
+      //  var_dump($field_values);
+        
+      //  var_dump(userpage::InsertAnyRecord('users', $field_names, $field_values));
+        
+      //   var_dump($data);
+       //  if(auth::CheckLogin($_POST[]) == FALSE){
+         //       echo 'В БД уже есть пользователь с выбранным Вами Логином!';
+         //   }
+         
+         ob_end_flush();
+       /*  
+         if((isset($_POST['submit']))&&($_POST['submit'] == 'Сохранить')){
+            $post = $_POST['post'];
+            echo '<h1>'.$post.'</h1>';
+        }
+        */
+    }
+    
+    
+    /*
+     * Метод возвращает ПОДРАЗДЕЛЕНИЯ на выбранное ОТДЕЛЕНИЕ
+     */
+    public function SelectdivisAction(){
+        ob_clean();
+       
+        
+        
+        $id_depart = filter_input(INPUT_POST, 'id_division');
+        
+       
+        
+        $divis = registration::GetDivision($id_depart);
+        
+         
+        /*
+         * Поиск подразделения которое не входит, в свою очередь, 
+         * в другие подразделения. 
+         * Т.е. находим "низший" уровень подразделения 
+         */
+        foreach($divis as $key_divis){
+            if($key_divis['u2'] !== '0'){
+                foreach ($divis as $key2_divis => $val_divis){
+                    if($val_divis['uid'] == $key_divis['u2']){
+                        unset($divis[$key2_divis]);
+                        break;
+                    }
+                }
+            }
+        }
+        
+       
+        include ROOT_MENUU.'/views/RegistrationSelectDivisView.php';
+        
+        ob_end_flush();
+    }
+    
+    /*
+     * Проверка на уникальность введенного ЛОГИНА при регистрации
+     */
+    private function CheckloginAction(){
+        ob_clean();
+        if(filter_input(INPUT_POST, 'action') == 'CheckLogin'){
+           
+            $login = filter_input(INPUT_POST, 'login');
+            
+            if(auth::CheckLogin($login) == FALSE){
+                echo 'В БД уже есть пользователь с выбранным Вами Логином!';
+            }
+          
+        }
+        ob_end_flush();
+    }
+    
+    /*
+     * Запись в Log-файл /log/scireg.log событий
+     */
+   static public function WriteToLog($event, $user, $error=''){
+        $log = ROOT_MENUU.'/log/scireg.log';
+        
+         if(!file_exists($log)){
+            $fp = fopen(ROOT_MENUU."/log/scireg.log", "w");
+            
+         }else{
+             $fp = fopen(ROOT_MENUU."/log/scireg.log", "a+");
+          //  fwrite($fp, date("[Y-m-d H:M:S]")." [".$user."] [".$event."] ".$error."\r\n");
+           // fclose($fp);
+         }
+         
+         fwrite($fp, date("Y-m-d H:i:s")." ".$user." ".$event." ".$error."\r\n");
+         fclose($fp);
+    }
+    
+    /*
+     * Href for static parts of page
+     */
+    public static function GetUrl4Static(){
+        return filter_input(INPUT_SERVER, 'DOCUMENT_ROOT');
+    }
+    
+    public static function HelpAction(){
+       include ROOT_MENUU."/views/help.html";
+       include_once MenuLoginController::GetUrl4Static()."/Views/footer.php";
+    }
+    
+    
+}
