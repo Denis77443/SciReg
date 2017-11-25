@@ -750,3 +750,9 @@ span.star_reg{
     margin-top: 5px;
     margin-bottom: 10px;
 }
+
+.imgDel{
+    cursor:pointer;
+    position:relative; 
+    margin-bottom: -2px;
+}

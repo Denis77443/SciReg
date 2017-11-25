@@ -313,19 +313,20 @@ class ScinceController extends test{
       * Вывод списка дополнительных файлов к ОТЧЕТУ
       */
      public function ShowFiles(){
-         $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
-         //var_dump($usrDir);
+          $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
          if(! is_dir($usrDir)){
-           //echo 'NOthing else';  
+          
          }else{
             
              $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
-            // echo ROOT_MENUU;
+           
              
              foreach($filesShow as $key){
-                 echo "<div name='fl' style='text-decoration: underline; cursor:pointer; clear:both; float:left'>".$key."</div>";
+                 echo "<div name='fl' class='show_fl'>".$key."</div>";
+                 echo "<div class='del_fl'><label for='".$key."'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";
+                
              }
-             //var_dump($files1);
+             
          }
      }
      
