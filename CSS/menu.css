@@ -701,3 +701,52 @@ span.star_reg{
     text-align: center; 
     padding-top: 20px;
 }
+
+/* БЛОК ФАЙЛЫ */
+
+.show_fl{
+    text-decoration: underline; 
+    font-style: italic;
+    cursor:pointer; 
+    clear:both; 
+    float:left;
+    padding-right: 15px;
+}
+
+.del_fl{
+    cursor:pointer;
+    float:left;
+}
+
+.inputCustom{
+    overflow: hidden;
+    position: relative;
+}
+
+.inputCustom [type=file] {
+    cursor: inherit;
+    display: block;
+    font-size: 999px;
+    filter: alpha(opacity=0);
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    top: 0;
+}
+
+.inputCustom {
+    font: bold 12px Arial, Helvetica;
+   /* background-image: linear-gradient(#444, #111); */
+    color: #fff;
+    background: OliveDrab;
+    border: 1px solid black;
+    border-radius: .1em;
+    float: left;
+    padding: .4em;
+    cursor:pointer;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}

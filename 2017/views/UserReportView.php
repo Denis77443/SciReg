@@ -21,15 +21,20 @@
         <textarea <?= $this->disabled_rep; ?> class="textarea_class" name='report' 
               id="<?=$this->user_id();?>"><?=$this->ShowReport();?></textarea>
      </div>  
-    <fieldset>
+  <!--  <fieldset>
         <legend>
             <a class="legenda">Файлы</a>
-        </legend>
+        </legend>-->
+        <div style="padding-left:0%">
         <form name="upload">
-            <input type='file' value='Прикрепить файл' multiple id='files' style="width: 90px;">
+            <label class="inputCustom">
+                Прикрепить файл
+                <input type='file' value='Прикрепить файл' multiple id='files'>
+             </label>   
             <div id="res_fl"><?=$this->ShowFiles();?></div>
         </form>
-    </fieldset>
+        </div>
+   <!-- </fieldset>-->
 </fieldset>
 
 
@@ -53,80 +58,139 @@
    
     //document.getElementById('res_fl').addEventListener('click', showFile);
     
-    function showFile(e){
-        var w = window.open();
-        w.document.open();
-        w.document.write(e.target.innerHTML);
-        w.document.close();
-        //console.log(e.target.innerHTML);
-        //console.log(YEAR);
-    }
+    
     
     document.getElementById('files').addEventListener('change', function(e){
-        e.preventDefault();
-        console.log(e.target.files[0]);
-        console.log(e.target.files[0].name);
-        
-        var input = e.target.files[0];
-        
+        var input = e.target.files[0], flag=0, sameFile=0;
+        var formData = new FormData();
+            formData.append('file',input);
+            
+        var oldFiles = document.querySelectorAll("div[class='show_fl']");
+           
+           if (oldFiles.length !== 0) {
+               Array.prototype.forEach.call(oldFiles, function(obj) {
+                   if ( obj.innerHTML === input.name ) {
+                       flag=(confirm(input.name+" уже существует!\n\nЖелаете перезаписать?") == true) ? 1:0;    
+                       sameFile = 1;
+                   } else {
+                      flag = 1; 
+                   }
+               });
+                   
+              
+           } else {
+               console.log('ничего нет');
+               flag = 1;
+           }
+           
+       if(flag === 1){    
+   
         var xhr = new XMLHttpRequest ();
         var body = "index.php?url=ajax&param=file";
-       // var data = "action=upload&input="+input;
-       var formData = new FormData();
-          // formData.append('action', 'upload');
-           formData.append('file',input);
-     //  formData.append('name', input.name);
-       
-       //var data = 'filename='+e.target.files[0].name+"&form="+formData;
-       
         
         xhr.open("POST", body, true);
-     //   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        
-        //xhr.setRequestHeader("Cache-Control", "no-cache");
-       // xhr.setRequestHeader('Content-type', 'multipart/form-data; charset=UTF-8');
-      //  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-     //    xhr.setRequestHeader("X-File-Name", input.name);
-       //  xhr.setRequestHeader("X-File-Size", input.size);
-       //  xhr.setRequestHeader("X-File-Type", input.type);
-        
-        
+      
         xhr.onreadystatechange = function(){
             if (xhr.readyState === 4 && xhr.status === 200) {
-               document.getElementById("res_fl").innerHTML += "<div name='fl' style='text-decoration: underline; cursor:pointer; clear:both; float:left'>"+input.name+"</div>";    
+              console.log(xhr.responseText);
+               if (sameFile === 0) {
+                 document.getElementById("res_fl").innerHTML += "<div name='fl' class='show_fl'>"+input.name+"</div>";    
+                 document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"' style='cursor:pointer'><img src='/Images/delete-icon.png'  style='position:relative; margin-bottom: -2px;'></label></div>";    
+              }  
+               
+               openFile('show_fl');
+               deleteFile('del_fl');
+               e.preventDefault();
+ 
             }
         };
-       // xhr.send(data);
-         xhr.send(formData);
-    });
+        xhr.send(formData);
+    }  
+    }, false);
     //document.getElementById("lat").addEventListener("click", Latex);
     //document.getElementById("77").addEventListener("change", check);
-        
-    function ready(){ 
-       
       
-      var textReport = document.querySelectorAll("textarea[class='textarea_class']");
-      
-       var fl = document.querySelectorAll("div[id='res_fl']:not(br)");
-       
-      Array.prototype.forEach.call(fl, function(obj){
-          
-          ['click'].forEach(function(evt){
-              obj.addEventListener(evt, function(e){
-                  console.log(e.target);
-                  console.log(e.target.textContent);
-                  var name = e.target.textContent;
+ /*
+  * Открытие прикреплённого файла
+  * 
+  * @param {type} classs
+  * @returns {undefined}
+  */
+ 
+ function openFile(classs){
+     var fl = document.querySelectorAll("div[class="+classs+"]");
+     /*
+      * Открытие прикреплённого файла
+      */ 
+     Array.prototype.forEach.call(fl, function(obj){
+         ['click'].forEach(function(evt){
+             obj.addEventListener(evt, function(e){
+                 var name = e.target.textContent,
+                     host = location.host,
+                     url = 'http://'+host+'/'+YEAR+'/index.php?url=openfile&name='+name;
                   
-                  var host = location.host;
-                  
-                  var url = 'http://'+host+'/'+YEAR+'/index.php?url=openfile&name='+name;
-                  window.open(url, "location=yes,resizable=yes,scrollbars=yes,status=yes"); 
-                  
+                  window.open(url, "location=yes,resizable=yes,scrollbars=yes,status=yes");   
               }, false) ;
           });
-          //console.log(obj.childNodes);
+      });  
+ } 
+ 
+ /*
+  * Удаление прикреплённого файла
+  * @returns {undefined}
+  */
+ function deleteFile(classs){
+     var delFile = document.querySelectorAll("div[class="+classs+"]");   
+     /*
+       * Удаление прикреплённого файла
+       */ 
+      Array.prototype.forEach.call(delFile, function(obj){
+          ['click'].forEach(function(evt1){
+              obj.addEventListener(evt1, function(e){
+                  var name1 = e.target.textContent;
+                  var label = obj.childNodes[0];
+                  
+                //  console.log(label.htmlFor);
+               if( confirm('Удалить файл: '+label.htmlFor+" ?") === true){
+                   console.log('delete!!!');
+                   var xhr = new XMLHttpRequest ();
+                   var body = "index.php?url=ajax&param=deletefile";
+                   var data = "action=delete&filename="+label.htmlFor;
+                   
+                   xhr.open("POST", body, true);
+                   xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                   
+                   xhr.onreadystatechange = function(){
+                       if ( xhr.readyState === 4 && xhr.status === 200 ) {
+                          
+                          var del = document.querySelectorAll('div[class=show_fl]');
+                          
+                          Array.prototype.forEach.call(del, function(obj){
+                              if(obj.textContent === label.htmlFor){
+                                  obj.remove();
+                                  label.remove();
+                              }
+                             
+                          });
+                        
+                       }
+                   };
+                   xhr.send(data);
+               }
+                        
+              }, false) ;
+          });
       }); 
+ }   
       
+    function ready(){ 
+       
+    
+      var textReport = document.querySelectorAll("textarea[class='textarea_class']");
+ 
+       openFile('show_fl');
+       deleteFile('del_fl');
+     
       
       Array.prototype.forEach.call(textReport, function(obj){
          // var data = {};
