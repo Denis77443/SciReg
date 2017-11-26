@@ -126,37 +126,32 @@ class MenuLoginController {
         if(isset($data['phone'])){ $data_out['phone'] = "'".$data['phone']."'"; }
         if(isset($data['mobile'])){ $data_out['mobile'] = "'".$data['mobile']."'"; }
     
-        
         $data_out['id_post'] = $data['id_post']; 
-       
-        
-        
-        
+           
         if (auth::CheckLogin($data['uname']) == FALSE) {
             echo 'Ошибка!<br>В БД уже есть пользователь с выбранным Вами Логином!';
         } else {
             //Выясняем к какой категории пользователей является 
             //вновь вносимый в БД
             
- 
-            
-            if($data['id_post'] < 20 || $data['id_post'] == 100){ 
+            if ($data['id_post'] < 20 || $data['id_post'] == 100){ 
                 $data_out['sci'] = 1;
-                
-                if( $data['id_post'] == 100 && registration::GetListOfCipher($data['uname']) == FALSE ){
-                    $flag = false;
-                } else {
-                    $flag = true;
-                }
+                $flag = ( $data['id_post'] == 100 && registration::GetListOfCipher($data['uname']) == FALSE ) ? false : true;
             }
-            if($data['id_post'] > 15 && $data['id_post']< 100){ $data_out['sci'] = 2; $flag = true;}
+            
+            if ($data['id_post'] > 15 && $data['id_post']< 100){ 
+                $data_out['sci'] = 2; $flag = true;
+            }
             
             $field_values = implode(",", $data_out); 
             $field_names = implode(",", array_keys($data_out)); 
             
-            //var_dump($flag);
-          
-            if(userpage::InsertAnyRecord('users', $field_names, $field_values) == TRUE && $flag == true){
+            
+            
+            //Проверка IMAP
+            if ($this->checkImap($data['uname'], $data['password'], $data_out['sci']) == true) {
+            
+            if (userpage::InsertAnyRecord('users', $field_names, $field_values) == TRUE && $flag == true) {
                 echo "Новый пользователь ".$data['uname']." успешно добавлен в БД";
                 
                 if ($data['id_post'] == 100) {
@@ -175,22 +170,76 @@ class MenuLoginController {
                     $lid = registration::GetLidForHeader($user_id);
                     $id_post = registration::GetPostForHeader($user_id);
                   
+                    //Внесение информации о руководителе в таблицу users БД
+                    //
                     userpage::UpdateAnyRecord($user_id, 'users', 'lid', $lid);
                     userpage::UpdateAnyRecord($user_id, 'users', 'id_post', $id_post);
                     
                   
                 }
+                $this->sendMail($data['email']);
             } else {
                 echo 'Ошибка!<br>Пользователь '.$data['uname'].' не может быть занесён в БД в качестве руководителя!!!';
             }
+            }else{
+                echo 'Ошибка!<br>Неправильное имя пользователя или пароль!';
+            }
         }
         
- 
          ob_end_flush();
-
     }
     
+    /*
+     * Для пользователей НАУКА
+     * Логин и пароль должны соответствовать электронной почте пользователя
+     * 
+     * Проверка пароля и логина у работников категории НАУКА 
+     * с имеющимися в электронной почте
+     * 
+     * для НАУКА 2 возвращается TRUE
+     */
+    private function checkImap($login, $pass, $usertype){
+        if ($usertype == 1) {
+           $imap_var = true;
+           // $imap_var = @imap_open("{mail.izmiran.ru:993/imap/ssl/novalidate-cert}INBOX",$login,$pass,OP_HALFOPEN);
+           return ($imap_var == true) ? true:false;
+        } else {
+            return true;
+        }   
+    }
     
+    /*
+     * Отправка mail-сообщения пользователю
+     */
+    private function sendMail(&$mail){
+        if(isset($mail)){
+            $user_text = <<<EOT
+
+Руководители отделений / секретари секций:
+Включают сотрудников в состав исполнителей тем
+Назначают одного из исполнителей руководителем темы
+
+Руководители тем:
+Заполняют исполнителям темы разделы "План" и "Ожидаемые результаты"
+
+Исполнители тем (научные сотрудники):
+Заполняют разделы "Отчет" и "Результаты научной деятельности".
+
+Руководители подразделений :
+Заполняют инженерам, лаборантам, программистам ("Наука 2") раздел "Задание"
+
+Наука 2:
+Заполняют раздел "Отчет".
+
+Руководителям для осуществления контроля доступен сервис
+просмотра статуса заполнения исполнителями отчетов        
+EOT;
+        }
+    }
+
+
+
+
     /*
      * Метод возвращает ПОДРАЗДЕЛЕНИЯ на выбранное ОТДЕЛЕНИЕ
      */
