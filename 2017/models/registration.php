@@ -47,9 +47,15 @@ class registration {
         $sql->bindParam(1, $login ,PDO::PARAM_STR);
         
         $sql->execute();
-        $row = $sql->fetchAll(PDO::FETCH_ASSOC);
-       // var_dump($row);
-        return $row[0];
+        
+        if ($sql->rowCount() == 0) {
+            return FALSE;
+        } else {
+          $row = $sql->fetchAll(PDO::FETCH_ASSOC);
+          return $row[0];
+        }
+        
+        
     }
     
     /*

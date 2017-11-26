@@ -277,7 +277,7 @@
                 
                // console.log(xhr.responseText.search('уже есть'));
                  
-                if (xhr.responseText.search('уже есть') === -1) {
+                if (xhr.responseText.search('Ошибка!') === -1) {
                     e.preventDefault();
                     document.getElementById('frm_rg').reset();
                     document.getElementById('printAreaReg').style.color = "green";
@@ -496,9 +496,9 @@
                    document.getElementById("error_pass").innerHTML = '';
                 }else{
                     document.getElementById("password").style.background = '#ff6666'; 
-                    document.getElementById("error_pass").innerHTML = 'Формат пароля: \n\
-                                                                     буквы лат. алфавита, спецсимволы, \n\
-                                                                     минимум одну цифру!';
+                    document.getElementById("error_pass").innerHTML = 'Формат: \n\
+                                                                       8 символов, буквы лат. алфавита, спецсимволы, \n\
+                                                                       минимум одна цифра!';
                 }
             }else{
                 document.getElementById("password").style.background = 'white';

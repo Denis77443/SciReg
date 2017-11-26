@@ -133,32 +133,31 @@ class MenuLoginController {
         
         
         if (auth::CheckLogin($data['uname']) == FALSE) {
-            echo 'В БД уже есть пользователь с выбранным Вами Логином!';
+            echo 'Ошибка!<br>В БД уже есть пользователь с выбранным Вами Логином!';
         } else {
             //Выясняем к какой категории пользователей является 
             //вновь вносимый в БД
             
-         /*   if ($data['id_post'] == 100) { 
-                echo 'Это руководитель'; 
-                $data_out['sci'] = 1; 
-                $list = registration::GetListOfCipher($data['uname']);
-               
-                foreach($list as $key => $cipher){
-                    if(registration::GetUnitId($cipher) !== FALSE ){
-                        echo registration::GetUnitId($cipher)['uid'];
-                    }
-                }
-                
-            }*/
+ 
             
-            if($data['id_post'] < 20 || $data['id_post'] == 100){ $data_out['sci'] = 1;}
-            if($data['id_post'] > 15 && $data['id_post']< 100){ $data_out['sci'] = 2;}
+            if($data['id_post'] < 20 || $data['id_post'] == 100){ 
+                $data_out['sci'] = 1;
+                
+                if( $data['id_post'] == 100 && registration::GetListOfCipher($data['uname']) == FALSE ){
+                    $flag = false;
+                } else {
+                    $flag = true;
+                }
+            }
+            if($data['id_post'] > 15 && $data['id_post']< 100){ $data_out['sci'] = 2; $flag = true;}
             
             $field_values = implode(",", $data_out); 
             $field_names = implode(",", array_keys($data_out)); 
             
-            if(userpage::InsertAnyRecord('users', $field_names, $field_values) == TRUE){
-                echo "Новый пользователь успешно добавлен в БД";
+            //var_dump($flag);
+          
+            if(userpage::InsertAnyRecord('users', $field_names, $field_values) == TRUE && $flag == true){
+                echo "Новый пользователь ".$data['uname']." успешно добавлен в БД";
                 
                 if ($data['id_post'] == 100) {
                     //echo 'Это руководитель'; 
@@ -181,29 +180,14 @@ class MenuLoginController {
                     
                   
                 }
+            } else {
+                echo 'Ошибка!<br>Пользователь '.$data['uname'].' не может быть занесён в БД в качестве руководителя!!!';
             }
         }
         
-     //   var_dump($data_out);
-        
-         
-      //  var_dump($field_names);
-      //  var_dump($field_values);
-        
-      //  var_dump(userpage::InsertAnyRecord('users', $field_names, $field_values));
-        
-      //   var_dump($data);
-       //  if(auth::CheckLogin($_POST[]) == FALSE){
-         //       echo 'В БД уже есть пользователь с выбранным Вами Логином!';
-         //   }
-         
+ 
          ob_end_flush();
-       /*  
-         if((isset($_POST['submit']))&&($_POST['submit'] == 'Сохранить')){
-            $post = $_POST['post'];
-            echo '<h1>'.$post.'</h1>';
-        }
-        */
+
     }
     
     
@@ -254,7 +238,7 @@ class MenuLoginController {
             $login = filter_input(INPUT_POST, 'login');
             
             if(auth::CheckLogin($login) == FALSE){
-                echo 'В БД уже есть пользователь с выбранным Вами Логином!';
+                echo 'Ошибка!\nВ БД уже есть пользователь с выбранным Вами Логином!';
             }
           
         }

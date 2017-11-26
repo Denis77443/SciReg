@@ -552,6 +552,8 @@ div.phone{
     color:red;
     padding-left: 7px;
     line-height: 13px;
+    border: 0px solid red;
+    line-height: 25px;
 }
 
 input#phone.regist::-webkit-input-placeholder::after{
@@ -755,4 +757,20 @@ span.star_reg{
     cursor:pointer;
     position:relative; 
     margin-bottom: -2px;
+}
+
+/* БЛОК SEARCH */
+
+.wrapper{
+    display:inline-block;
+    padding-left: 17%; 
+    width: 710px;
+    margin-bottom: 40px;    
+}
+
+.caption{
+    text-align:center;
+    padding-top:55px;
+    padding-bottom:20px; 
+    font-weight: bold;
 }

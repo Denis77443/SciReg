@@ -446,7 +446,7 @@ class UserController extends ScinceController{
              if(method_exists(get_called_class(), 'ScinceOrScince2')){
                 // var_dump($this->ScinceOrScince2($this->user_id()));
                  if($this->ScinceOrScince2($this->user_id()) == TRUE){
-                     echo 'Наука 2';
+                     //Пользователь Наука 2
                      $this->titleNIR = 'Задание';
                      //ScinceController::UserAction();
                      echo "<div style='min-height:600px;'>";
@@ -456,8 +456,9 @@ class UserController extends ScinceController{
                      echo "</div>";
                  //    var_dump($this->titleNIR);
                  }else{
+                     // Пользователь - Наука
+                     
                      $this->titleNIR = 'План НИР';
-                     echo 'Наука просто';
                      
                      include_once ROOT_MENUU.'/views/UserPersInfoView.php';
                      include_once ROOT_MENUU.'/views/UserSubjectView.php';

@@ -23,14 +23,6 @@
         <div id='result_sub03'></div>
         
    <?php } ?>    
-      
-        
-        
-   <!-- 
-    <div id="sub1">Тема 1</div>
-    <div id="sub2">Тема 2</div>
-    <div id="sub3">Тема 3</div>-->
-    
+ 
 </fieldset> 
 </div>    
-<?php echo 'Время выполнения скрипта: '.(microtime(true) - INDEX_START).' сек.';  ?>

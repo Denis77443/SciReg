@@ -464,10 +464,6 @@ class LeaderController extends UserController{
      */
     
     public function SearchAction(){
-        //$this->test = 'SVINNNNNN';
-       // var_dump($this->test);
-     //   $this->ShowItemMenuPodrazd($_SESSION['lidlevel']);
-      //  include_once ROOT_MENUU.'/views/MenuView.php';
         $this->ShowListOfUsers();
     }
     
