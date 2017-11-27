@@ -92,15 +92,19 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
               console.log(xhr.responseText);
                if (sameFile === 0) {
-                 document.getElementById("res_fl").innerHTML += "<div name='fl' class='show_fl'>"+input.name+"</div>";    
-                 document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";    
-              }  
+              
+                document.getElementById("res_fl").innerHTML += "<div name='fl' class='show_fl'>"+input.name+"</div>";    
+                document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";    
                
                openFile('show_fl');
                deleteFile('del_fl');
-               e.preventDefault();
+              }  
+               
+              
+               
  
             }
+            e.preventDefault();
         };
         xhr.send(formData);
     }  
