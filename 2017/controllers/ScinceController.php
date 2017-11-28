@@ -1,5 +1,6 @@
 <?php
 //phpinfo();
+
 ob_start();
 
 include_once ROOT_MENUU.'/controllers/test.php';
@@ -296,6 +297,7 @@ class ScinceController extends test{
              $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
            
              
+             var_dump($this->MaxFileSize());
              
              foreach($filesShow as $key){
                  echo "<div name='fl' class='show_fl'>".$key."</div>";
@@ -325,7 +327,22 @@ class ScinceController extends test{
         return "(".round(($file/1000000),1)." МB)";
         }     
     } 
-     
+    
+    /*
+     * Узнаем значение upload_max_filesize php.ini
+     */
+    private function MaxFileSize(){
+       $post_max_size =  ini_get('post_max_size');
+       $upload_max_filesize = ini_get('upload_max_filesize');
+       
+       if ( $upload_max_filesize < $post_max_size ) {
+           return $upload_max_filesize{0};
+       } else {
+           return $post_max_size{0};
+       }
+    }
+
+
     public function ShowButtonUploadFiles(){
         if ($this->user_id() === $_SESSION['user_id']) {
             include ROOT_MENUU.'/views/ButtonUploadFiles.php';
