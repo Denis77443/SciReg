@@ -45,7 +45,7 @@ class ScinceController extends test{
      */
     public function LogoutAction(){
        
-       MenuLoginController::WriteToLog('User logged out', $this->UserLogin());
+       MenuLoginController::WriteToLog('logged out', $this->UserLogin());
        unset($_SESSION['user_id']);
        unset($_SESSION['lidlevel']);
        //var_dump($_REQUEST);

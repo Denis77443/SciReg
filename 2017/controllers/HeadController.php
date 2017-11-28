@@ -35,7 +35,7 @@ class HeadController extends LeaderController {
             // echo '<a style=color:red>Руководитель темы из HeadController()</a></br>';
              $result = true;
          }else{
-             var_dump(access::GetIdSecretary($user_id));
+            // var_dump(access::GetIdSecretary($user_id));
              if(access::GetIdSecretary($user_id)[0]['id_sec'] == $_SESSION['user_id']){
                  $result = true;
              }
@@ -93,9 +93,9 @@ class HeadController extends LeaderController {
           }else{
               //var_dump(subject::GetUserSubjects($user_id));
               echo '<h1>Update records</h1>';
-              var_dump(subject::GetFieldSub($user_id));
+            //  var_dump(subject::GetFieldSub($user_id));
               $upd_field = subject::GetFieldSub($user_id)[0]['sub'];
-              var_dump($upd_field);
+             // var_dump($upd_field);
               if($upd_field == ''){
                   if(subject::UpdateSubject($user_id, $requiest) == TRUE){
                       header('Location: http://'.filter_input(INPUT_SERVER, 'SERVER_NAME').'/'.test::currientYear().'/'.$userpage);
@@ -103,7 +103,7 @@ class HeadController extends LeaderController {
               }else{
                   
                   $requiest = $upd_field.','.$requiest;
-                  var_dump($requiest);
+               //   var_dump($requiest);
                   subject::UpdateSubject($user_id, $requiest);
                   header('Location: http://'.filter_input(INPUT_SERVER, 'SERVER_NAME').'/'.test::currientYear().'/'.$userpage);
               }
@@ -221,7 +221,7 @@ class HeadController extends LeaderController {
             $del = menu::DeleteAllSubjects($this->user_id());
             if($del != FALSE){
                 $this->candelete = true;
-                $this->deleteSubj = 'Темы (удаление) ALL';
+                $this->deleteSubj = 'Темы (удаление)';
             }
         }
         return $this->candelete;
@@ -244,7 +244,7 @@ class HeadController extends LeaderController {
     public function leadship(){
         if(menu::WhoseSession($this->user_id()) == TRUE){
            if(menu::SubjectWithoutLeader($this->user_id()) !== FALSE){ 
-             $this->leadship = 'Темы (Руководство)';
+             $this->leadship = 'Темы (руководство)';
              $sub_w_lead = menu::SubjectWithoutLeader($this->user_id());
              return $sub_w_lead;
            }

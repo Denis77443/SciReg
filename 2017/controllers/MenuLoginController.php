@@ -36,7 +36,7 @@ class MenuLoginController {
             
             if (empty($auth)){
                 ob_clean();
-                MenuLoginController::WriteToLog('Access ERROR : ', $login, ' access error incorrect login!');
+                MenuLoginController::WriteToLog('ERROR', $login,'username incorrect!');
                 echo 'Ошибка пользователь не найден!';  
                 exit();
                 ob_end_flush();
@@ -48,7 +48,7 @@ class MenuLoginController {
             if($auth[0]['uid_wp'] != NULL){
                // session_start();
                 $_SESSION['user_id'] = $auth[0]['uid'];
-                 MenuLoginController::WriteToLog('Logged in: ', $login);
+                 MenuLoginController::WriteToLog('logged in ', $login);
             //    header("Location:index.php?=".$auth[0]['uid']);
                 exit();
                 
@@ -61,12 +61,8 @@ class MenuLoginController {
                        // session_start();
                        ob_clean();
                         $_SESSION['user_id'] = $auth[0]['uid'];
-                        MenuLoginController::WriteToLog('Logged in with admin pass: ', $login);
-                      
-                        
-                       //  header("Location:index.php?=".$auth[0]['uid']);
-                        //exit();
-                        echo '<h4>CORRECT</h4>';
+                        MenuLoginController::WriteToLog('logged in', $login, 'login with admin pass');
+                        //echo '<h4>CORRECT</h4>';
                          return true;
                     }else{
                         echo '<h4>НЕт такого Юзера!!!</h4>';
@@ -76,9 +72,8 @@ class MenuLoginController {
                     }
                 }else{
                     ob_clean();
-                    MenuLoginController::WriteToLog('Access ERROR : ', $login, ' access error incorrect password!');
+                    MenuLoginController::WriteToLog('ERROR', $login, 'password incorrect!');
                     echo 'Ошибка ввода пароля!';
-                    //header("Location:index.php?url=login");
                     exit();
                     return false;
                     ob_end_flush();
@@ -182,9 +177,11 @@ class MenuLoginController {
                 $this->sendMail($data['email'], $user_id);
             } else {
                 echo 'Ошибка!<br>Пользователь '.$data['uname'].' не может быть занесён в БД в качестве руководителя!!!';
+                MenuLoginController::WriteToLog('ERROR registration', $data['uname'], 'user not exist in table LEADSHIP in DB');
             }
             }else{
                 echo 'Ошибка!<br>Неправильное имя пользователя или пароль!';
+                MenuLoginController::WriteToLog('ERROR registration', $data['uname'], 'IMAP error username pass incorrect');
             }
         }
         

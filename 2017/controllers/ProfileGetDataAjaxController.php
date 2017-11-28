@@ -7,22 +7,23 @@ class ProfileGetDataAjaxController {
         $data = get_object_vars(json_decode(file_get_contents('php://input')));
         
         var_dump($data);
-       // var_dump(get_object_vars($data));
+       
         $user_id = $data['user_id'];
-       // $result = [];
-        
-      //  var_dump($user_id);
-        //var_dump($ggg);
-        
+      
         foreach($data as $field_name => $value){
             
-            if($field_name !== 'user_id'){
-          //  var_dump($key);
-           // echo "<h2>".$field_name." ".$value."</h2>";
-           // userpage::UpdateRepField($user_id, $field_name, $value);
-           userpage::UpdateAnyRecord($user_id, 'users', $field_name, $value); 
-           //$result += [$field_name];
+            if ($field_name !== 'user_id') {
+               userpage::UpdateAnyRecord($user_id, 'users', $field_name, $value); 
+               
+            if ($field_name == 'password') {
+                
+               // Пишем в log изменение пароля
+               MenuLoginController::WriteToLog('changed password', userpage::GetSNMUser($user_id)['uname']);
             }
+               
+            }
+            
+            
         }
         
        // var_dump($result);

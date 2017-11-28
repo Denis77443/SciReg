@@ -245,7 +245,7 @@ abstract class test {
                 
                 $buffer = fgets($handle, 40);
                 
-                MenuLoginController::WriteToLog('Latex ERROR: ', $uname, $buffer);
+                MenuLoginController::WriteToLog('ERROR LATEX', $uname);
                 ob_end_flush();
                
             }
