@@ -63,6 +63,8 @@
         var formData = new FormData();
             formData.append('file',input);
             
+            console.log(e.target.files[0]);
+            
         var oldFiles = document.querySelectorAll("div[class='show_fl']");
            
            if (oldFiles.length !== 0) {
@@ -100,6 +102,7 @@
               } 
 
             }
+            
             e.preventDefault();
         };
         xhr.send(formData);

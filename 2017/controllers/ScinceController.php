@@ -1,4 +1,5 @@
 <?php
+//phpinfo();
 ob_start();
 
 include_once ROOT_MENUU.'/controllers/test.php';
@@ -246,6 +247,9 @@ class ScinceController extends test{
     
      private function CheckAction($action){
          ob_clean();
+         var_dump($_FILES);
+         var_dump($_POST);
+         
          $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
          
          //Запись файла к ОТЧЕТУ
@@ -288,13 +292,18 @@ class ScinceController extends test{
           
          }else{
             
+            // var_dump(scandir($usrDir,1));
              $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
            
+             
              
              foreach($filesShow as $key){
                  echo "<div name='fl' class='show_fl'>".$key."</div>";
                 if ($this->user_id() === $_SESSION['user_id']) {
-                    echo "<div class='del_fl'><label for='".$key."'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";
+                    echo "<div class='del_fl'>"
+                       . "<label for='".$key."'><span class='fl_size'>".$this->ShowSize(filesize($usrDir."/".$key))."</span>"
+                            . "<img src='/Images/delete-icon.png' class='imgDel'>"
+                       . "</label></div>";
                  }
                 
              }
@@ -302,6 +311,20 @@ class ScinceController extends test{
          }
      }
      
+    /*
+     * Размер файла
+     */ 
+    private function ShowSize($file) {
+        if($file < 1000){
+            return "(".$file." B)";
+        }
+        
+        if($file > 1000 && $file < 1000000){
+            return "(".round(($file/1000),1)." KB)";
+        } else {
+        return "(".round(($file/1000000),1)." МB)";
+        }     
+    } 
      
     public function ShowButtonUploadFiles(){
         if ($this->user_id() === $_SESSION['user_id']) {
