@@ -87,11 +87,13 @@ function checkBeforeSubmit(e){
           var body = e.target.action;
           var data = JSON.stringify(dataToInsert);
           
+          beforeSend();
           xhr.open("POST", body, false);
           xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
           
           xhr.onreadystatechange = function(){
             if (xhr.readyState === 4 && xhr.status === 200) {
+                
                 if (xhr.responseText.search('Ошибка!') === -1) {
                     e.preventDefault();
                     document.getElementById('frm_rg').reset();
@@ -101,6 +103,7 @@ function checkBeforeSubmit(e){
                      document.getElementById('uname').value = "";
                     message.innerHTML = xhr.responseText;
                 }
+                
             }  
           };
           xhr.send(data);
@@ -108,7 +111,13 @@ function checkBeforeSubmit(e){
        e.preventDefault();
     }
     
-   
+   /*
+    * Loader gif
+    * Ожидание ответа от сервера
+    */ 
+   function beforeSend(){
+       document.getElementById('printAreaReg').innerHTML = '<img src="/Images/loader.gif" id="loading" style="height:40px; width: 40px;" />';
+   }
     //Проверка на содержимое INPUT email, 
     //Если не пусто, то валидация
     

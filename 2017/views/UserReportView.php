@@ -57,7 +57,7 @@
     
     
     if(document.getElementById('files')){
-    
+    //console.log('FILES');
     document.getElementById('files').addEventListener('change', function(e){
         var input = e.target.files[0], flag=0, sameFile=0;
         var formData = new FormData();
@@ -90,14 +90,18 @@
       
         xhr.onreadystatechange = function(){
             if (xhr.readyState === 4 && xhr.status === 200) {
-              console.log(xhr.responseText);
+             // console.log(xhr.responseText);
                if (sameFile === 0) {
                  document.getElementById("res_fl").innerHTML += "<div name='fl' class='show_fl'>"+input.name+"</div>";    
                  document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";    
-              }  
+              } 
                
+               console.log("flag= "+flag);
+               console.log("same= "+sameFile);
                openFile('show_fl');
-               deleteFile('del_fl');
+               deleteFile('del_fl', 'from FILES');
+               
+              // console.log('DEL from FILES');
                e.preventDefault();
  
             }
@@ -140,8 +144,10 @@
   * Удаление прикреплённого файла
   * @returns {undefined}
   */
- function deleteFile(classs){
-     var delFile = document.querySelectorAll("div[class="+classs+"]");   
+ function deleteFile(classs, fu){
+     var delFile = document.querySelectorAll("div[class="+classs+"]");  
+     console.log(delFile);
+     console.log(fu);
      /*
        * Удаление прикреплённого файла
        */ 
@@ -151,7 +157,9 @@
                   var name1 = e.target.textContent;
                   var label = obj.childNodes[0];
                   
-                //  console.log(label.htmlFor);
+                //  alert('DELete '+label.htmlFor);
+                  console.log('label === '+label.htmlFor);
+                  //console.log('name1 === '+name1);
                if( confirm('Удалить файл: '+label.htmlFor+" ?") === true){
                    console.log('delete!!!');
                    var xhr = new XMLHttpRequest ();
@@ -175,6 +183,7 @@
                           });
                         
                        }
+                       
                    };
                    xhr.send(data);
                }
@@ -190,7 +199,8 @@
       var textReport = document.querySelectorAll("textarea[class='textarea_class']");
  
        openFile('show_fl');
-       deleteFile('del_fl');
+       deleteFile('del_fl', 'from READY');
+      // console.log('DEL from READY');
      //e.preventDefault();
       
       Array.prototype.forEach.call(textReport, function(obj){

@@ -15,7 +15,7 @@ class userpage {
     //put your code here
     public static function GetSNMUser($user_id){
        $db_pdo = DB::connection();
-       $sql = $db_pdo->prepare("SELECT name, surname, mname, email, phone, mobile "
+       $sql = $db_pdo->prepare("SELECT name, surname, mname, email, phone, mobile, uname "
                              . "FROM users WHERE uid = ? LIMIT 1");
        $sql->bindParam(1, $user_id ,PDO::PARAM_INT);
        $sql->execute();

@@ -220,90 +220,60 @@ class ScinceController extends test{
          * 
          */
         if((null !== filter_input(INPUT_GET, 'param'))&&(filter_input(INPUT_GET, 'param') == 'file')){
-            
-       // if((isset($_GET['param']))&&($_GET['param'] == 'save_plan')){
-            // include_once ROOT_MENUU.'/controllers/ReportRezSaveAjaxController.php';
-           // echo '<h1>FILES</h1>';
-           // ob_clean();
-            
-       /*     
-            $uploaddir = './files/';
-                if( ! is_dir( $uploaddir ) ){ 
-                    echo 'нет папки!!!'; }else{
-                        echo 'есть папка FILES!!!';
-                        
-                    var_dump(ROOT_MENUU.'/files/'.$this->user_id());
-                    
-                    $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
-                    
-                    if( ! is_dir( $usrDir ) ){
-                        echo 'папки пользователя нет!!! создавать?';
-                        mkdir( $usrDir, 0777 );
-                    }else{
-                        //echo 'папка пользоватеоля ЕСТЬ!!!';
-                    //   var_dump($_POST); 
-                      //  var_dump($_FILES);
-                        
-                     /*   foreach( $_FILES as $file ){
-                            if( move_uploaded_file( $file['tmp_name'], $usrDir.'/'.basename($file['name']) ) ){
-                                $files[] = realpath( $usrDir.'/'.$file['name'] );
-                            }
-                            else{
-                                $error = true;
-                            }
-                            
-                        }*/
-                        
-                        // var_dump($_POST);
-                     /*  $fp = fopen($usrDir.'/'.$filename, "w");
-                        fwrite($fp, file_get_contents('php://input'));
-                        fclose($fp);*/
-                        //$req = ob_get_contents();
-                        //var_dump($req);
-                      //  var_dump(file_put_contents($filename, (file_get_contents('php://input'))));
-                   // }
-                    
-                  //  }
-           // file_put_contents($filename, (file_get_contents('php://input')));
-            //var_dump($_POST);
-           // file_put_contents($filename, (file_get_contents('php://input')));
-           // $rrr = file_get_contents('php://input');
-           // var_dump($rrr);
-            
-           // getallheaders();
-         //   var_dump($_SERVER['HTTP_X_FILE_NAME']);
-            //var_dump($_FILES);
-            
-           // ob_end_flush();
             $ajaxAction = 'file';
-           // $ajaxAction = filter_input(INPUT_FILE, 'file', FILTER_SANITIZE_STRING);
             $this->CheckAction($ajaxAction);
-            //echo $ajaxAction;
         }
+        
+        /*
+         * Удаление файлов
+         * 
+         */
+        if((null !== filter_input(INPUT_GET, 'param'))&&(filter_input(INPUT_GET, 'param') == 'deletefile')){
+           // echo "DELETE!!!!!";
+           // print_r(filter_input_array(INPUT_POST, FILTER_DEFAULT));
+           // var_dump($_POST);
+            //var_dump(filter_input(INPUT_POST,'delete',FILTER_DEFAULT));
+            
+            $ajaxAction = filter_input(INPUT_POST, 'action');
+           // var_dump($ajaxAction);
+          // $ajaxAction = 'file';
+            $this->CheckAction($ajaxAction);
+        }
+        
+        
         
      }
     
      private function CheckAction($action){
          ob_clean();
-       //  var_dump($_FILES);
+         $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
+         
          //Запись файла к ОТЧЕТУ
          if ($action === 'file') { 
  
-             $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
+             
              
              if (! is_dir($usrDir) ) {
                  mkdir( $usrDir, 0777 );
-             } 
+             }
              
              foreach ( $_FILES as $file ) {
                if( move_uploaded_file( $file['tmp_name'], $usrDir.'/'.$file['name'] ) ){
                    $files[] = realpath( $usrDir.'/'.$file['name'] );
+                   
                } else {
                  $error = true;
                }
              }
                  
          } 
+         
+          if ($action === 'delete') { 
+              $file = filter_input(INPUT_POST, 'filename');
+              unlink($usrDir.'/'.$file);
+              //echo '<h1>DELR!!!!!!</h1> '.filter_input(INPUT_POST, 'filename');
+             // echo $this->user_id();
+          }
          
          ob_end_flush();
      }
@@ -332,7 +302,8 @@ class ScinceController extends test{
          }
      }
      
-     public function ShowButtonUploadFiles(){
+     
+    public function ShowButtonUploadFiles(){
         if ($this->user_id() === $_SESSION['user_id']) {
             include ROOT_MENUU.'/views/ButtonUploadFiles.php';
         }else{
@@ -341,31 +312,21 @@ class ScinceController extends test{
      }
      
      
-     public function OpenFileAction(){
-        // var_dump($_REQUEST);
-        // echo $this->user_id();
-         
+     
+  public function OpenFileAction(){
+        
          $name = $_REQUEST['name'];
          $user_id = (isset($_REQUEST['user_id']) && ($_REQUEST['user_id'] !== 'undefined')) ? $_REQUEST['user_id'] : $this->user_id();
          
-         //var_dump($user_id);
+         
          
          $type = mime_content_type(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
-         
-         //var_dump($type);
-     //    echo $this->user_id();
-         
+     
           header('Content-type: '.$type);
-                header('Content-disposition: inline; filename = ' . $name .'');
-             // echo $type;
-               readfile(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
+          header('Content-disposition: inline; filename = ' . $name .'');
+             
+          readfile(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
          
-         
-         
-         //header('Content-type: application/pdf');
-         //header('Content-disposition: inline; filename = ' . $uname . '.pdf');
-         
-      //   echo 'OpenFileAction';
          
      }
 

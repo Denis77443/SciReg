@@ -154,11 +154,13 @@ class MenuLoginController {
             if (userpage::InsertAnyRecord('users', $field_names, $field_values) == TRUE && $flag == true) {
                 echo "Новый пользователь ".$data['uname']." успешно добавлен в БД";
                 
+                $user_id = registration::GetUserId($data['uname']);
+                    
                 if ($data['id_post'] == 100) {
                     //echo 'Это руководитель'; 
                     $data_out['sci'] = 1; 
                     $list = registration::GetListOfCipher($data['uname']);
-                    $user_id = registration::GetUserId($data['uname']);
+                    
                     
                     foreach ($list as $key => $cipher) {
                         if(registration::GetUnitId($cipher) !== FALSE ){
@@ -177,7 +179,7 @@ class MenuLoginController {
                     
                   
                 }
-                $this->sendMail($data['email']);
+                $this->sendMail($data['email'], $user_id);
             } else {
                 echo 'Ошибка!<br>Пользователь '.$data['uname'].' не может быть занесён в БД в качестве руководителя!!!';
             }
@@ -199,11 +201,20 @@ class MenuLoginController {
      * для НАУКА 2 возвращается TRUE
      */
     private function checkImap($login, $pass, $usertype){
+      
+        
         if ($usertype == 1) {
-           $imap_var = true;
-           // $imap_var = @imap_open("{mail.izmiran.ru:993/imap/ssl/novalidate-cert}INBOX",$login,$pass,OP_HALFOPEN);
-           return ($imap_var == true) ? true:false;
+          
+            $imap_var = @imap_open("{mail.izmiran.ru:993/imap/ssl/novalidate-cert}INBOX",$login,$pass,OP_HALFOPEN);
+            
+            $errs = imap_errors();
+           return ($imap_var == true && $errs == false) ? true:false;
+         
+           
+         
+          
         } else {
+           
             return true;
         }   
     }
@@ -211,8 +222,10 @@ class MenuLoginController {
     /*
      * Отправка mail-сообщения пользователю
      */
-    private function sendMail(&$mail){
-        if(isset($mail)){
+    private function sendMail(&$mail, $user_id){
+        $text_for_all = '';
+        $headers = '';
+        
             $user_text = <<<EOT
 
 Руководители отделений / секретари секций:
@@ -234,7 +247,27 @@ class MenuLoginController {
 Руководителям для осуществления контроля доступен сервис
 просмотра статуса заполнения исполнителями отчетов        
 EOT;
-        }
+
+         $text_for_all .= "Уважаемый пользователь SciReg !\n\n"
+                   ."Вы успешно зарегистрировались в системе под имнем (login): "
+                   .userpage::GetSNMUser($user_id)['uname']."\n"
+                   .userpage::GetSNMUser($user_id)['surname']." ".userpage::GetSNMUser($user_id)['name']." "
+                   .userpage::GetSNMUser($user_id)['mname'].", ".userpage::GetPostUser($user_id)['post_title']."\n"
+                   ."Подразделение: ".userpage::GetDeptmUser($user_id)[0][0]."\n"
+                   ."Отделение: ".userpage::GetDeptmUser($user_id)[0][3]."\n\n"
+                   . "У вас есть возможность редактировать свои персональные "
+                   . "данные и менять пароль входа. \n"
+                   . "".$user_text."\n"
+                   ."\n";
+        
+         $headers .= 'Content-type: text/plain; charset=utf-8'."\r\n";
+         $headers .= 'From: webmaster@izmiran.ru'. "\r\n";
+         $mailTo = 'scireg@izmiran.ru';
+        
+         if (isset($mail) ) { $mailTo .= ','.$mail;}
+        
+       
+         mail($mailTo,'SciReg',$text_for_all,$headers);
     }
 
 
