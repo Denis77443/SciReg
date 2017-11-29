@@ -295,9 +295,7 @@ class ScinceController extends test{
             
             // var_dump(scandir($usrDir,1));
              $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
-           
-             
-             var_dump($this->MaxFileSize());
+                                   
              
              foreach($filesShow as $key){
                  echo "<div name='fl' class='show_fl'>".$key."</div>";
@@ -329,16 +327,17 @@ class ScinceController extends test{
     } 
     
     /*
-     * Узнаем значение upload_max_filesize php.ini
+     * Узнаем значение upload_max_filesize и upload_max_filesize из php.ini
+     * для предупреждения о лимите объема загружамого файла
      */
-    private function MaxFileSize(){
+    protected function MaxFileSize(){
        $post_max_size =  ini_get('post_max_size');
        $upload_max_filesize = ini_get('upload_max_filesize');
        
        if ( $upload_max_filesize < $post_max_size ) {
-           return $upload_max_filesize{0};
+           return substr($upload_max_filesize, 0, -1);
        } else {
-           return $post_max_size{0};
+           return substr($post_max_size, 0, -1);
        }
     }
 

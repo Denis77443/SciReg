@@ -30,6 +30,7 @@
                
             
             <div id="res_fl"><?=$this->ShowFiles();?></div>
+            <input type="hidden" value="<?=$this->MaxFileSize()?>" id="mx_fl_sz">
         </form>
         </div>
 </fieldset>
@@ -49,33 +50,43 @@
      * @param {type} obj 
      * @returns {undefined}
      */
-   // document.onmouseup = function(){alert('sdfsfd');}
-    document.addEventListener("DOMContentLoaded", ready);
-    
+ 
+ 
+ document.addEventListener("DOMContentLoaded", ready);
    
-    //document.getElementById('res_fl').addEventListener('click', showFile);
-    
-    
-    if(document.getElementById('files')){
-    //console.log('FILES');
-    document.getElementById('files').addEventListener('change', function(e){
-        var input = e.target.files[0], flag=0, sameFile=0;
-        var formData = new FormData();
-            formData.append('file',input);
-            
-            console.log(e.target.files[0]);
-            
-        var oldFiles = document.querySelectorAll("div[class='show_fl']");
+ if ( document.getElementById('files') ) {
+     document.getElementById('files').addEventListener('change', function(e){
+     var input = e.target.files[0], flag=0, sameFile=0;
+     var formData = new FormData();
+         formData.append('file',input);
+     var maxFileSize = document.getElementById("mx_fl_sz").value , flagLimit = 0; 
+     
+     /*
+      * Проверка на размер загружаемого файла 
+      * лимит - maxFileSize [php.ini]
+      */
+     if (showSize(input.size).match(/M/g) !== null) {
+        var numbr = showSize(input.size).replace(/[^0-9\.]/g,'');
+      
+        if ( Number(numbr) > Number(maxFileSize) ) {
+            alert('Размер присоединяемого файла превосходит '+maxFileSize+' MB');
+            flagLimit = 1;
+        }
+     }
+     
+  
+ if(flagLimit === 0){
+     var oldFiles = document.querySelectorAll("div[class='show_fl']");
            
-           if (oldFiles.length !== 0) {
-               Array.prototype.forEach.call(oldFiles, function(obj) {
-                   if ( obj.innerHTML === input.name ) {
-                       flag=(confirm(input.name+" уже существует!\n\nЖелаете перезаписать?") == true) ? 1:0;    
-                       sameFile = 1;
-                   } else {
-                      flag = 1; 
-                   }
-               });
+         if ( oldFiles.length !== 0 ) {
+             Array.prototype.forEach.call(oldFiles, function(obj) {
+                 if ( obj.innerHTML === input.name ) {
+                     flag=(confirm(input.name+" уже существует!\n\nЖелаете перезаписать?") == true) ? 1:0;    
+                     sameFile = 1;
+                 } else {
+                     flag = 1; 
+                 }
+             });
                    
               
            } else {
@@ -96,7 +107,7 @@
                if (sameFile === 0) {
 
                  document.getElementById("res_fl").innerHTML += "<div name='fl' class='show_fl'>"+input.name+"</div>";    
-                 document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"'><img src='/Images/delete-icon.png' class='imgDel'></label></div>";    
+                 document.getElementById("res_fl").innerHTML += "<div class='del_fl'><label for='"+input.name+"'><span class='fl_size'>"+showSize(input.size)+"</span><img src='/Images/delete-icon.png' class='imgDel'></label></div>";    
                  openFile('show_fl');
                  deleteFile('del_fl');
               } 
@@ -107,6 +118,9 @@
         };
         xhr.send(formData);
     }  
+    
+    }
+    
     }, false);
     }
     //document.getElementById("lat").addEventListener("click", Latex);
@@ -118,6 +132,17 @@
   * @param {type} classs
   * @returns {undefined}
   */
+ 
+ function showSize(file){
+    if (file < 1000) {
+        return "("+file+" B)";
+    }    
+    if (file > 1000 && file < 1000000) {
+        return "("+(file/1000).toFixed(1)+" KB)";
+    } else {
+        return "("+(file/1000000).toFixed(1)+" MB)";
+    }
+ }
  
  function openFile(classs){
      var fl = document.querySelectorAll("div[class="+classs+"]");
