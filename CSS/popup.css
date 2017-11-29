@@ -21,6 +21,10 @@
   /* Use this for centering if unknown width/height */
   transform: translate(-50%, -50%);
   
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  
   /* If known, negative margins are probably better (less chance of blurry text). */
   /* margin: -200px 0 0 -200px; */
   
