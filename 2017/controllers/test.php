@@ -110,7 +110,82 @@ abstract class test {
             } 
        }
     }
+    
+    public function ShowFilesLatex(){
+         "<div>sdfsdfsdf</div>";
+    }
 
+
+    /*
+      * Вывод списка дополнительных файлов к ОТЧЕТУ
+      */
+     public function ShowFiles(){
+          
+          $result = [];
+                  
+          $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
+         if(! is_dir($usrDir)){
+          
+         }else{
+            
+            // var_dump(scandir($usrDir,1));
+             $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
+                                   
+             
+             foreach($filesShow as $key =>$value){
+                 
+                 $result[$key]['name'] = $value;
+                 $result[$key]['size'] = $this->ShowSize(filesize($usrDir."/".$value));
+                 if ($this->user_id() === $_SESSION['user_id']) {
+                     $result[$key]['del'] = 1;
+                 }else{
+                     $result[$key]['del'] = 0;
+                 }
+                 
+                 
+               /*
+                 echo "<div name='fl' class='show_fl'>".$key."</div>";
+                 
+                if ($this->user_id() === $_SESSION['user_id']) {   
+                    echo "<div class='del_fl'>"
+                       . "<label for='".$key."'><span class='fl_size'>".$this->ShowSize(filesize($usrDir."/".$key))."</span>"
+                            . "<img src='/Images/delete-icon.png' class='imgDel'>"
+                       . "</label></div>";
+                 } else {
+                    echo "<div class= 'usr_pg'>"
+                       . "<label for='".$key."'><span class='fl_size'>".$this->ShowSize(filesize($usrDir."/".$key))."</span>"
+                       . "</label></div>"; 
+                 }
+               */
+             }
+             
+         }
+         return $result;
+         //var_dump($result);
+     }
+     
+         
+    /*
+     * Размер файла
+     */ 
+    private function ShowSize($file) {
+        if($file < 1000){
+            return "(".$file." B)";
+        }
+        
+        if($file > 1000 && $file < 1000000){
+            return "(".round(($file/1000),1)." KB)";
+        } else {
+        return "(".round(($file/1000000),1)." МB)";
+        }     
+    } 
+    
+    
+    
+    
+    
+    
+    
     /*
      * Latex
      * Вывод на экран ОТЧЁТа в формате Latex
@@ -200,7 +275,16 @@ abstract class test {
                 $text .= "\\vskip 1cm";
               //  $text .= 'dkkdjkd';
                 $text .= $reqest;
-               // $text .= $data['report'];
+                
+                if(!empty($this->ShowFiles())){
+                    $text .= "\\vskip 1cm";
+                    $text .= 'Файлы:\\\\';
+                    
+                    foreach ($this->ShowFiles() as $key => $val){
+                       $text .= str_replace('_','\_',$val['name']).'\\\\'; 
+                    }  
+                }
+                
                 $text .= "\\end{document}";
             } else {
                 $text .= "\\vskip 1cm";

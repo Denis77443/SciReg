@@ -28,8 +28,31 @@
             странице пользователя-->
             <?=$this->ShowButtonUploadFiles()?>
                
+            <div id="res_fl">
+                <?php 
+                    foreach($this->ShowFiles() as $key => $val){ ?>
+                      <div name='fl' class='show_fl'><?=$val['name']?></div>
+                      <?php if ( $val['del'] == 1) {?>
+                      
+                      <div class='del_fl'>
+                          <label for='<?=$val['name']?>'>
+                              <span class='fl_size'><?=$val['size']?></span>
+                              <img src='/Images/delete-icon.png' class='imgDel'>
+                          </label>
+                      </div>   
+                      
+                      <?php } else {?>
+                      <div class= 'usr_pg'>
+                         <label for='<?=$val['name']?>'>
+                              <span class='fl_size'><?=$val['size']?></span>
+                          </label> 
+                      </div>
+                      
+                      <?php } ?>
+                <?php } ?>
             
-            <div id="res_fl"><?=$this->ShowFiles();?></div>
+            </div>
+            
             <input type="hidden" value="<?=$this->MaxFileSize()?>" id="mx_fl_sz">
         </form>
         </div>
@@ -83,6 +106,7 @@
                  if ( obj.innerHTML === input.name ) {
                      flag=(confirm(input.name+" уже существует!\n\nЖелаете перезаписать?") == true) ? 1:0;    
                      sameFile = 1;
+                     check;
                  } else {
                      flag = 1; 
                  }
@@ -179,8 +203,9 @@
           ['click'].forEach(function(evt1){
               obj.addEventListener(evt1, function(e){
                   var name1 = e.target.textContent;
-                  var label = obj.childNodes[0];
+                  var label = obj.childNodes[1];
                   
+                  console.log(label);
                 //  alert('DELete '+label.htmlFor);
                   console.log('label === '+label.htmlFor);
                   //console.log('name1 === '+name1);

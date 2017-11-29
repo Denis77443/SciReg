@@ -284,47 +284,7 @@ class ScinceController extends test{
      }
      
      
-     /*
-      * Вывод списка дополнительных файлов к ОТЧЕТУ
-      */
-     public function ShowFiles(){
-          $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
-         if(! is_dir($usrDir)){
-          
-         }else{
-            
-            // var_dump(scandir($usrDir,1));
-             $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
-                                   
-             
-             foreach($filesShow as $key){
-                 echo "<div name='fl' class='show_fl'>".$key."</div>";
-                if ($this->user_id() === $_SESSION['user_id']) {
-                    echo "<div class='del_fl'>"
-                       . "<label for='".$key."'><span class='fl_size'>".$this->ShowSize(filesize($usrDir."/".$key))."</span>"
-                            . "<img src='/Images/delete-icon.png' class='imgDel'>"
-                       . "</label></div>";
-                 }
-                
-             }
-             
-         }
-     }
-     
-    /*
-     * Размер файла
-     */ 
-    private function ShowSize($file) {
-        if($file < 1000){
-            return "(".$file." B)";
-        }
-        
-        if($file > 1000 && $file < 1000000){
-            return "(".round(($file/1000),1)." KB)";
-        } else {
-        return "(".round(($file/1000000),1)." МB)";
-        }     
-    } 
+ 
     
     /*
      * Узнаем значение upload_max_filesize и upload_max_filesize из php.ini

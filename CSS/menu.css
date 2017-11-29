@@ -731,6 +731,11 @@ span.star_reg{
     align-items: flex-end;
      height: 20px;
 }
+.usr_pg{
+    display: flex;
+    align-items: flex-end;
+     height: 20px;
+}
 
 .inputCustom{
     overflow: hidden;
@@ -782,6 +787,18 @@ span.star_reg{
     font-size: 12px;
     padding-right: 10px;
 }
+.fl_limit{
+   font-family: Arial,sans-serif;
+    color:#7b7b7b;
+    vertical-align: middle;
+    font-size: 12px;
+    padding-right: 10px;
+    margin-left: 20px; 
+    width: 70px; 
+    float:left; 
+    margin-top: 10px;
+}
+
 
 /* БЛОК SEARCH */
 
