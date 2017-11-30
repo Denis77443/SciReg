@@ -29,11 +29,21 @@ class SearchjaxController {
     public function SearchjaxAction(){
         
         $letter = filter_input(INPUT_POST, 'id');
-        //$letter = $_POST['id'];
+        
         $lidlevel = $_SESSION['lidlevel'];
-        //echo $lidlevel;
+       
         $user_get = search::GetFoundUsers($letter, $lidlevel);
-      // var_dump($user_get);
+       
+       /*
+        * Исключение для EVN - показывать в поиске Директора
+        */
+        if( userpage::GetSNMUser($_SESSION['user_id'])['uname'] === 'evn'){
+            if(search::GetFoundCEO($letter,'15') !== FALSE){
+                $user_get[count($user_get)] = search::GetFoundCEO($letter,'15');   
+            }
+        }
+       
+       
         $user_find = '';
         $user_Sc2 = '';
         foreach($user_get as $key){

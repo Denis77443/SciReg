@@ -38,6 +38,7 @@ class HeadController extends LeaderController {
              if( (access::GetIdSecretary($user_id)[0]['id_sec'] == $_SESSION['user_id'])||
                  ($this->AccessPageCEO($_SESSION['user_id'], $user_id) === true) ){
                  
+                // var_dump($this->disabled);
                  //echo  '<h2>Secretary</h2>';
                  $result = true;
              }
@@ -50,9 +51,11 @@ class HeadController extends LeaderController {
      */
     private function AccessPageCEO($id_sec, $user_id){
         if( (userpage::GetSNMUser($id_sec)['uname'] === 'evn')&&
-            (userpage::GetSNMUser($user_id)['uname'] === 'kvd') ){
+            (userpage::GetSNMUser($user_id)['uname'] === 'kvd') ) {
+            $this->disabled = '';
             return true;
-        }else{
+            
+        } else {
             return false;
         }
     }

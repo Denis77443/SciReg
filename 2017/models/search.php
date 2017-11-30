@@ -114,4 +114,29 @@ class search {
         //var_dump($row);
         return $row;
     }
+    /*
+     * Исключение для секретаря EVN при поиске Директора
+     * 
+     */
+    public static function GetFoundCEO($letter,$id_post){
+         $db_pdo = DB::connection();
+         $sql=$db_pdo->prepare("SELECT users.uid, users.sci, "
+                                 .        "concat(users.surname,' ',users.name,' ',users.mname) AS name "
+                                 ." FROM unit "
+                               //  . "LEFT JOIN unit AS unit_otd ON unit_otd.u4 = unit.uid "
+                                 . "LEFT JOIN users ON users.id_post = unit.id_post "
+                                                    . "AND users.surname LIKE concat(?,'%') "
+                                 . " WHERE unit.id_post = ? AND users.uid IS NOT NULL LIMIT 1");
+         $sql->bindParam(1, $letter, PDO::PARAM_STR);
+         $sql->bindParam(2, $id_post, PDO::PARAM_STR);
+         
+         $sql->execute();
+         
+         if($sql->rowCount() > 0){
+            $row = $sql->fetchAll();
+            return $row[0];
+        }else{
+            return FALSE;
+        }    
+    }
 }
