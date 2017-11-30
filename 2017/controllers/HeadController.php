@@ -28,23 +28,38 @@ class HeadController extends LeaderController {
     //Переопределение метода AccessUserPage с учётом ДОСТУПА СЕКРЕТАРЯ !!!
     public function AccessUserPage($user_id){
         $result = false;
-        
-      //  echo '<h2>HEADCONTROLLER</h2>';
+       
         
         if(LeaderController::AccessUserPage($user_id) == TRUE){
             // echo '<a style=color:red>Руководитель темы из HeadController()</a></br>';
              $result = true;
          }else{
             // var_dump(access::GetIdSecretary($user_id));
-             if(access::GetIdSecretary($user_id)[0]['id_sec'] == $_SESSION['user_id']){
+             if( (access::GetIdSecretary($user_id)[0]['id_sec'] == $_SESSION['user_id'])||
+                 ($this->AccessPageCEO($_SESSION['user_id'], $user_id) === true) ){
+                 
+                 //echo  '<h2>Secretary</h2>';
                  $result = true;
              }
          }
         return $result;
     }
     
-    
-    
+    /*
+     * Исключение для секретаря EVN - доступ на страницу Директора 
+     */
+    private function AccessPageCEO($id_sec, $user_id){
+        if( (userpage::GetSNMUser($id_sec)['uname'] === 'evn')&&
+            (userpage::GetSNMUser($user_id)['uname'] === 'kvd') ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+
+
     /*
      * Сохранение ТЕМы в БД 
      * Редирект/перегрузка страницы после сохранения тем пользователя

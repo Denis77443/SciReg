@@ -12,7 +12,7 @@
     
     
         
-        <div style='padding-left: 0%; padding-right: 0%; float:left; width: 50%'>
+        <div style='padding-left: 0%; padding-right: 0%; float:left; width: 50%' class="sc_stat" id="sc_stat">
         <fieldset>
             <legend>Научные работники [<?=$countScince?>]</legend>
             <div style='float:left;' class='fio_stat_tmpl'>Ф.И.О.</div>
@@ -34,4 +34,4 @@
         </div>
     
 </fieldset>
-</div>    
+</div> 

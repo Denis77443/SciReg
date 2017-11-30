@@ -381,5 +381,45 @@ class status {
         return $row[0];
     }
     
+    /*
+     * Вернуть статистику выполнения отчёта Директора
+     */
+    public static function GetCEOInfo($id_post){
+        $db_pdo = DB::connection();
+        $sql = $db_pdo->prepare("SELECT  unit.uid AS id_dep, unit.title AS title_dep, users.sci, "
+                                    . "users.uid, "
+                                    . "concat(users.surname, ' ', "
+                                    .        "concat(LEFT(users.name, LENGTH(1)),'.'), ' ', "
+                                    .        "concat(LEFT(users.mname, LENGTH(1)),'.') ) AS name, "
+                                    . "results.report, "
+                                    . "results.expected_result AS exp, "
+                                    . "results.plan, "
+                                    . "results.articles_in_russ AS air, "
+                                    . "results.articles_in_foreign AS aif, "
+                                    . "results.monograph AS mono, "
+                                    . "results.reports_at_conf AS conf, "
+                                    . "results.lecture_course AS course, "
+                                    . "results.patents AS patents, "
+                                    . "results.leadership AS leader, "
+                                    . "results.other AS other, "
+                                    . "unit_dep.title, unit_dep.uid AS uid_dep, "
+                                    . "user_sub.sub "
+                                      . "FROM unit "
+                                      . "LEFT JOIN unit AS un_sec ON un_sec.u4 = unit.uid "
+                                      . "LEFT JOIN users ON users.id_post = unit.id_post "
+                                      . "LEFT JOIN results ON results.uid = users.uid "
+                                      . "LEFT JOIN user_sub ON user_sub.uid = users.uid "
+                                      . "LEFT JOIN unit AS unit_dep ON unit_dep.uid = users.lid "
+                                      . "WHERE unit.id_post = ? "
+                                      . "ORDER BY unit_dep.uid, users.surname ");
+                $sql->bindParam(1, $id_post, PDO::PARAM_INT);
+        
+        $sql->execute();
+         $row = $sql->fetchAll(PDO::FETCH_ASSOC);
+       
+         return $row;
+        
+        
+    }
     
 }

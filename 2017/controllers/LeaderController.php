@@ -82,7 +82,7 @@ class LeaderController extends UserController{
     */
    protected function SetPlanDisabledOrNot($userpage){
        if($userpage == FALSE){
-         //  var_dump($this->AccessUserPage($this->user_id()));
+        
         $this->AccessUserPage($this->user_id());   
            
        }
@@ -105,7 +105,7 @@ class LeaderController extends UserController{
     } 
     
     private function PrintListOfUsers1($key, &$name_dep1, $lidlevel){
-        
+      
         $title = ($key['title'] == NULL) ? 'title2' : 'title';
         $uid_dep = ($key['uid_dep'] == NULL) ? 'uid_dep2' : 'uid_dep';
         $sci = ($key['sci'] !== NULL) ? 'sci' : 'sci2';
@@ -142,18 +142,25 @@ class LeaderController extends UserController{
         
        
         $lidlevel = $_SESSION['lidlevel'];
-       // $st = microtime(true);
+       
         $output = status::GetUsersInDepartment($this->user_id(), $lidlevel);
-        
-     //  var_dump($output);
-       // var_dump($lidlevel);
-      //  var_dump($this->depar);
-        
+    
         if($lidlevel == 'secretaryhead'){
+            
             $this->depar = status::GetDepForSecretary($this->user_id());
+           
+            $uname = userpage::SelectAnyRecord($this->user_id(), 'uname', 'users')[0]['uname'];
+           
+            //Исключение для Секретаря
+            //Для EVN показывать Директора
+            if ($uname == 'evn') {
+                $last = count($output);
+                $output[$last] = status::GetCEOInfo('15')[0];
+                $output[$last]['title'] = 'Директор';
+            }
         }
         
-      //  var_dump(status::GetDepForSecretary($this->user_id()));
+     
        foreach ($output as $key){
           
            /*
@@ -171,6 +178,7 @@ class LeaderController extends UserController{
            if( ($lidlevel == 'otdelleader')||($lidlevel == 'dephead')||
                ($lidlevel == 'secretaryhead')||($lidlevel == 'sectorleader')||
                ($lidlevel == 'lableader') ){
+               
                
                $sci = ( (isset($key['sci2']))&&($key['sci2'] !== NULL) ) ? 'sci2':'sci';
                        

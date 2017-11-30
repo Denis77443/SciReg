@@ -407,7 +407,7 @@ class UserController extends ScinceController{
          // Руководитель темы, который находится у себя на странице
          // может редактировать поля ПЛАН и ОЖМДАЕМЫЕ РЕЗУЛЬТАТЫ
          if(($this->isUserSubjectLeader() == TRUE)AND($userpage == TRUE)){
-             echo "<a style='color:red;'>РУКОВОДИТЕЛЬ ТЕМЫ + У СЕБЯ НА СТРАНИЦЕ</a>";
+            
              return $this->disabled = '';
          }
          
