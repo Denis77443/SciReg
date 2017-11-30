@@ -203,14 +203,12 @@
           ['click'].forEach(function(evt1){
               obj.addEventListener(evt1, function(e){
                   var name1 = e.target.textContent;
-                  var label = obj.childNodes[1];
-                  
-                  console.log(label);
-                //  alert('DELete '+label.htmlFor);
-                  console.log('label === '+label.htmlFor);
+                  var label = (obj.childNodes[1] !== undefined) ? obj.childNodes[1] : obj.childNodes[0];
+               
+                  //console.log('label === '+label.htmlFor);
                   //console.log('name1 === '+name1);
                if( confirm('Удалить файл: '+label.htmlFor+" ?") === true){
-                   console.log('delete!!!');
+                  // console.log('delete!!!');
                    var xhr = new XMLHttpRequest ();
                    var body = "index.php?url=ajax&param=deletefile";
                    var data = "action=delete&filename="+label.htmlFor;

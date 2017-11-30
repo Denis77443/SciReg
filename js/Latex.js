@@ -1,7 +1,7 @@
       document.getElementById('lat').addEventListener('click', Latex);
       
       function Latex(event){
-          
+          console.log('вызов функциииии');
            var text = document.getElementsByTagName("textarea")[2].value;
            /*
            var simArr = text.match(/[^a-z0-9A-Zа-яА-Я\s\:]/g);
@@ -75,10 +75,14 @@
              };*/
             
            xhr.onreadystatechange = function() {
+               
             if (xhr.readyState === 4 && xhr.status === 200) {
                var str = xhr.responseText;
-               
-               if (str.search('No pages of output.') !== -1) {
+              // console.log(str.search('Fatal error'));
+              
+               //if(str.search('Fatal error')){console.log("fatal error");}else{console.log('not fatal error');}
+               //if (str.search('No pages of output.') !== -1){
+               if (str.search('No pages of output.') !== -1 || str.search('Fatal error') !== -1) {
                        
                  if (str.match(/-----------------------(.|\n)*terminal!/)){ 
                    alert('Ошибка LaTeX!!!\n'+str.match(/-----------------------(.|\n)*terminal!/));

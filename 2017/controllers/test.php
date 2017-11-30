@@ -111,11 +111,7 @@ abstract class test {
        }
     }
     
-    public function ShowFilesLatex(){
-         "<div>sdfsdfsdf</div>";
-    }
-
-
+    
     /*
       * Вывод списка дополнительных файлов к ОТЧЕТУ
       */
@@ -128,7 +124,7 @@ abstract class test {
           
          }else{
             
-            // var_dump(scandir($usrDir,1));
+            
              $filesShow = array_diff(scandir($usrDir,1),array('..', '.'));
                                    
              
@@ -141,27 +137,12 @@ abstract class test {
                  }else{
                      $result[$key]['del'] = 0;
                  }
-                 
-                 
-               /*
-                 echo "<div name='fl' class='show_fl'>".$key."</div>";
-                 
-                if ($this->user_id() === $_SESSION['user_id']) {   
-                    echo "<div class='del_fl'>"
-                       . "<label for='".$key."'><span class='fl_size'>".$this->ShowSize(filesize($usrDir."/".$key))."</span>"
-                            . "<img src='/Images/delete-icon.png' class='imgDel'>"
-                       . "</label></div>";
-                 } else {
-                    echo "<div class= 'usr_pg'>"
-                       . "<label for='".$key."'><span class='fl_size'>".$this->ShowSize(filesize($usrDir."/".$key))."</span>"
-                       . "</label></div>"; 
-                 }
-               */
+               
              }
              
          }
          return $result;
-         //var_dump($result);
+         
      }
      
          
@@ -193,11 +174,7 @@ abstract class test {
 
     public function LatexAction() {
         $reqest = file_get_contents('php://input');
-       // var_dump($reqest);
-      //  if(!empty($rrrr)){$rrr = 'NOT EMPTY';}else{$rrr = 'EMPTY';}
-        
-     //   echo $rrr;
-//$rrr = 'sss';
+       
 
         /* Проверка доступа - 
          /* доступ к формированию отчета Latex возможен
@@ -278,7 +255,7 @@ abstract class test {
                 
                 if(!empty($this->ShowFiles())){
                     $text .= "\\vskip 1cm";
-                    $text .= 'Файлы:\\\\';
+                    $text .= '{\large\bf Файлы:}\\\\';
                     
                     foreach ($this->ShowFiles() as $key => $val){
                        $text .= str_replace('_','\_',$val['name']).'\\\\'; 
@@ -295,7 +272,7 @@ abstract class test {
             }
             
             if((!empty($reqest))||(empty($reqest)&&(!file_exists("/tmp/" . $uname . ".pdf")))){
-                
+           //   MenuLoginController::WriteToLog('Жуткая проверка', 'LatexAction');
             $fp = fopen("/tmp/" . $uname . ".tex", "w");
             fwrite($fp, $text);
             fclose($fp);
@@ -309,9 +286,10 @@ abstract class test {
             }
             $filename = "/tmp/" . $uname . ".pdf";
             
+            $this->LatexFatalError($uname);
             
             if (file_exists($filename)) {
-
+                 
                 header('Content-type: application/pdf');
                 header('Content-disposition: inline; filename = ' . $uname . '.pdf');
               
@@ -320,6 +298,7 @@ abstract class test {
              
                 if(empty($reqest)){
                 unlink('/tmp/' . $uname . '.pdf');}
+                
             } else {
                 ob_clean();
                 
@@ -336,6 +315,27 @@ abstract class test {
             return true;
         }
     }
+    
+    /*
+     *  Проверка log-файла на строку Fatal error occurred
+     *  тот случай, когда Latex все-равно создаёт pdf-файл, 
+     *  но он повреждён и не считывается
+     */
+    private function LatexFatalError($uname){
+        $result = explode("\n", file_get_contents('/tmp/' . $uname . '.log'));
+        
+        foreach ($result as $key => $value) {
+            if ( strpos($value, 'Fatal error occurred') ) {
+              //Если pdf готов, то удаляем его => он повреждён
+                if (file_exists('/tmp/' . $uname . '.pdf')) {
+                   
+                    MenuLoginController::WriteToLog('LATEX FATAL ERROR', $uname);
+                    unlink('/tmp/' . $uname . '.pdf');
+                }
+            }    
+        }
+    }
+
 
     public function Show_GetUrl($get_url) {
         $this->get_url = $get_url;
