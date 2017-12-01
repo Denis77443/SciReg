@@ -132,7 +132,7 @@
             <script type="text/javascript" src="/js/Set_subjLead.js"></script>
             
             <?php if(isset($this->leadship)){ ?>
-                <li>
+                <li id="li_ld">
                     <a><?=$this->leadship?></a>
                     <ul id="ul_sub_lead">
                         
@@ -440,10 +440,11 @@
        var insertSubject = document.querySelector('#d_ins_subj');      
        var deleteSubject0 = document.querySelector('#li_del_sbj0');      
        var deleteSubject1 = document.querySelector('#li_del_sbj1');
+       var leadship = document.querySelector('#li_ld');
              
              
         if(!document.getElementById('view_sbj')){
-            [insertSubject, deleteSubject0, deleteSubject1].forEach(function(ev){
+            [insertSubject, deleteSubject0, deleteSubject1, leadship].forEach(function(ev){
                if(ev){
                    ev.style.display = 'none';
                } 

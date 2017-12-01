@@ -313,20 +313,37 @@ class ScinceController extends test{
      
      
   public function OpenFileAction(){
-        
+      $error = 0;
+      $error = (isset($_GET['url']) && isset($_GET['name']) 
+                && isset($_GET['user_id'])) ? 0:1;
+      
+      if ($error == 0){
          $name = $_REQUEST['name'];
-         $user_id = (isset($_REQUEST['user_id']) && ($_REQUEST['user_id'] !== 'undefined')) ? $_REQUEST['user_id'] : $this->user_id();
+         $user_id = (isset($_REQUEST['user_id']) && ($_REQUEST['user_id'] !== 'undefined')) ? $_REQUEST['user_id'] : $this->user_id();   
+         if($this->AccessUserPage($user_id) == FALSE){ $error = 1; }
+      }
+      
+      if ($error == 0){
+        $fl = ROOT_MENUU.'/files/'.$user_id.'/' . $name;
+       // var_dump($fl);
+        if(!file_exists($fl)){$error = 1;}
+      }
+      
+      if($error == 0){
+      
+ 
          
-         
-         
-         $type = mime_content_type(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
-     
+          $type = mime_content_type(ROOT_MENUU.'/files/'.$user_id.'/' . $name); 
           header('Content-type: '.$type);
           header('Content-disposition: inline; filename = ' . $name .'');
              
           readfile(ROOT_MENUU.'/files/'.$user_id.'/' . $name);
          
-         
+      } else { 
+         $this->error = 'Ошибка доступа!';
+         include ROOT_MENUU . '/views/Error.html';
+         return false;  
+      }
      }
 
      /*
