@@ -90,7 +90,6 @@
               </ul>   
           </li>
           <!--Добавить тему (пользователь - зав.отделения, секретарь)-->
-         
           <?php if( (isset($this->insert_subj))AND($this->ShowInsertItem() == TRUE) ){ ?>
           
           

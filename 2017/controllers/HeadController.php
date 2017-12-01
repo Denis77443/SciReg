@@ -154,8 +154,9 @@ class HeadController extends LeaderController {
                 //Добовлять темы 
                 //руководителю  или секретарю можно 
                 //только пользователям из "своего" отделения
-                if(($hid_u4[0]['hid_u4'] == $_SESSION['user_id'])||
-                   ($hid_sec[0]['id_sec'] == $_SESSION['user_id'])){
+                if( ($hid_u4[0]['hid_u4'] == $_SESSION['user_id'])||
+                    ($hid_sec[0]['id_sec'] == $_SESSION['user_id'])||
+                    ($this->AccessPageCEO($_SESSION['user_id'], $this->user_id()) === true) ){
                     return TRUE;
                 } 
                 
@@ -235,7 +236,8 @@ class HeadController extends LeaderController {
      *  назначенные темы, которые необходимо удалить
      */
     protected function candelete(){
-        if(menu::WhoseSession($this->user_id()) == TRUE){
+        if( (menu::WhoseSession($this->user_id()) == TRUE)||
+            ($this->AccessPageCEO($_SESSION['user_id'], $this->user_id()) === true) ){
             $del = menu::DeleteAllSubjects($this->user_id());
             if($del != FALSE){
                 $this->candelete = true;
@@ -260,7 +262,8 @@ class HeadController extends LeaderController {
     *  Показывать пункт меню Сервис->Темы (Руководство)
     */
     public function leadship(){
-        if(menu::WhoseSession($this->user_id()) == TRUE){
+        if( (menu::WhoseSession($this->user_id()) == TRUE) ||
+            ($this->AccessPageCEO($_SESSION['user_id'], $this->user_id()) === true) ){
            if(menu::SubjectWithoutLeader($this->user_id()) !== FALSE){ 
              $this->leadship = 'Темы (руководство)';
              $sub_w_lead = menu::SubjectWithoutLeader($this->user_id());
