@@ -231,14 +231,7 @@ class ScinceController extends test{
          * 
          */
         if((null !== filter_input(INPUT_GET, 'param'))&&(filter_input(INPUT_GET, 'param') == 'deletefile')){
-           // echo "DELETE!!!!!";
-           // print_r(filter_input_array(INPUT_POST, FILTER_DEFAULT));
-           // var_dump($_POST);
-            //var_dump(filter_input(INPUT_POST,'delete',FILTER_DEFAULT));
-            
             $ajaxAction = filter_input(INPUT_POST, 'action');
-           // var_dump($ajaxAction);
-          // $ajaxAction = 'file';
             $this->CheckAction($ajaxAction);
         }
         
@@ -248,9 +241,6 @@ class ScinceController extends test{
     
      private function CheckAction($action){
          ob_clean();
-         var_dump($_FILES);
-         var_dump($_POST);
-         
          $usrDir = ROOT_MENUU.'/files/'.$this->user_id();
          
          //Запись файла к ОТЧЕТУ
@@ -265,7 +255,7 @@ class ScinceController extends test{
              foreach ( $_FILES as $file ) {
                if( move_uploaded_file( $file['tmp_name'], $usrDir.'/'.$file['name'] ) ){
                    $files[] = realpath( $usrDir.'/'.$file['name'] );
-                   
+                   MenuLoginController::WriteToLog('add file', $this->UserLogin(), $file['name']);
                } else {
                  $error = true;
                }
@@ -276,8 +266,7 @@ class ScinceController extends test{
           if ($action === 'delete') { 
               $file = filter_input(INPUT_POST, 'filename');
               unlink($usrDir.'/'.$file);
-              //echo '<h1>DELR!!!!!!</h1> '.filter_input(INPUT_POST, 'filename');
-             // echo $this->user_id();
+              MenuLoginController::WriteToLog('remove file', $this->UserLogin(), $file);
           }
          
          ob_end_flush();
