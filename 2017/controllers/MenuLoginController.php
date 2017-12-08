@@ -23,15 +23,14 @@ class MenuLoginController {
     
     public function AuthAction(){
        
-        $login = filter_input(INPUT_POST, 'surname');
+        $login = trim(filter_input(INPUT_POST, 'surname'));
         $pass = filter_input(INPUT_POST, 'name');
         
         //var_dump($_POST);
         
         if((isset($login))&&(isset($pass))){
-     //   var_dump(auth::CheckLP($login, $pass));
             $auth = auth::CheckLP($login, $pass);
-           // var_dump(auth::CheckLP($login, $pass));
+           
             
             
             if (empty($auth)){
@@ -329,6 +328,7 @@ EOT;
      */
    static public function WriteToLog($event, $user, $error=''){
         $log = ROOT_MENUU.'/log/scireg.log';
+        $ip = $_SERVER['REMOTE_ADDR'];
         
          if(!file_exists($log)){
             $fp = fopen(ROOT_MENUU."/log/scireg.log", "w");
@@ -339,7 +339,7 @@ EOT;
            // fclose($fp);
          }
          
-         fwrite($fp, date("Y-m-d H:i:s")." ".$user." ".$event." ".$error."\r\n");
+         fwrite($fp, date("Y-m-d H:i:s")." ".$ip." ".$user." ".$event." ".$error."\r\n");
          fclose($fp);
     }
     
